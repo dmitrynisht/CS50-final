@@ -1,0 +1,20 @@
+# Compiled files
+*.pyc
+*.pyi
+
+# virtual environment
+.venv/
+
+# vscode settings
+.vscode/
+
+# Database files
+*.db
+*.ini
+
+# Command files
+*.load
+
+# SQL requests files
+*.sql
+!/pg_backup/*.sql
