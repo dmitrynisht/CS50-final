@@ -5,5 +5,31 @@
 {% endblock %}
 
 {% block main %}
-    Don't you see customers here?
+    <table class="table table-hover table-bordered caption-top">
+        <caption>Our customers</caption>
+        <thead>
+            <tr class="border-bottom-2 border-dark">
+                <th class="text-start" scope="col">ID</th>
+                <th class="text-start" scope="col">First name</th>
+                <th class="text-end" scope="col">Last name</th>
+                <th class="text-end" scope="col">Email</th>
+                <th class="text-end" scope="col">Edit</th>
+            </tr>
+        </thead>
+        {% if customers %}
+            <tbody>
+            {% for row in customers %}
+                <tr>
+                    <td class="text-start">{{ row.id }}</td>
+                    <td class="text-start">{{ row.fname }}</td>
+                    <td class="text-end">{{ row.lname }}</td>
+                    <td class="text-end">{{ row.email }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-outline-secondary btn-sm sell" name="symbol" value="">Edit</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>    
+        {% endif %}
+    </table>
 {% endblock %}

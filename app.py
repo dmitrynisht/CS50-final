@@ -37,12 +37,27 @@ db = SQL("sqlite:///tiny_beauty.db")
 @app.route("/")
 @login_required
 def index():
+    """"""
+    
+    s_action = "/"
+    
+    # return render_template("index.html")
+    return redirect("/customers")
+
+
+@app.route("/customers")
+@login_required
+def customers():
     """List of customers"""
 
-    s_action = "/"
+    s_action = "/customers"
 
-    return render_template("customers.html", s_action=request.args.get("s_action", s_action))
-    # return render_template("index.html")
+    customers = get_customers()
+
+    return render_template("customers.html",
+        s_action=request.args.get("s_action", s_action),
+        customers=request.args.get("customers", customers)
+        )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -130,8 +145,17 @@ def login():
 def get_user(*, username):
     """Search for user by username provided"""
 
-    stmt = db_requests.get_user()
+    stmt = db_requests.stmt_sql_get_user()
     rows = db.execute(stmt, usr_login=username)
+
+    return rows
+
+
+def get_customers(*args):
+    """Search for user by username provided"""
+
+    stmt = db_requests.stmt_sql_get_customers()
+    rows = db.execute(stmt)
 
     return rows
 
@@ -162,7 +186,7 @@ def main(argv=None):
 
     # with app.test_request_context():
     #     testingrequests()
-    #
+    # generate_password_hash(request.form.get("password"))
     
     # Start app
     app.run(debug=True)

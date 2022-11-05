@@ -28,11 +28,11 @@
     <body>
 
         <!-- + TOP SCREEN MENU-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border">
+        <nav class="navbar navbar-expand navbar-light bg-light border">
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.usr_id %}
                     <ul class="navbar-nav mr-auto mt-0">
-                        {% for href, caption in [('/', 'Customers')] %}
+                        {% for href, caption in [('/customers', 'Customers')] %}
                             {% if s_action == href %}
                                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
                             {% else %}
@@ -100,7 +100,7 @@
             {% endif %}
         {% endwith %}
 
-        <main class="container py-5 text-center">
+        <main class="container py-2 text-center">
             {% block main %}{% endblock %}
         </main>
 
