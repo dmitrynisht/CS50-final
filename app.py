@@ -45,18 +45,42 @@ def index():
     return redirect("/customers")
 
 
-@app.route("/customers")
+@app.route("/customers", methods=["GET", "POST"])
 @login_required
 def customers():
     """List of customers"""
 
-    s_action = "/customers"
+    s_action = request.form.get("submitMode") or "/customers"
 
+    if request.method == "POST":
+        if s_action == "/customer_info":
+            return redirect(url_for("customer_info",
+                                    s_action=s_action,
+                                    fname=request.form.get("fname")
+                                    )
+                            )
+    
     customers = get_customers()
 
     return render_template("customers.html",
         s_action=request.args.get("s_action", s_action),
         customers=request.args.get("customers", customers)
+        )
+
+
+@app.route("/customer_info", methods=["GET", "POST"])
+@login_required
+def customer_info():
+    """Customer info"""
+    
+    s_action = "/customer_info"
+
+    customer_orders = get_customer_orders(customer_id=1)
+
+    return render_template("customer_info.html",
+        s_action=request.args.get("s_action", s_action),
+        fname=request.args.get("fname"),
+        orders=request.args.get("orders", customer_orders)
         )
 
 
@@ -152,13 +176,18 @@ def get_user(*, username):
 
 
 def get_customers(*args):
-    """Search for user by username provided"""
+    """Get all customers"""
 
     stmt = db_requests.stmt_sql_get_customers()
     rows = db.execute(stmt)
 
     return rows
 
+
+def get_customer_orders(*, customer_id):
+    """Search for orders by customer id provided"""
+
+    return ['order1', 'order4']
 
 @app.route("/logout")
 def logout():

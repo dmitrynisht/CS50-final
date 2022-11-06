@@ -28,7 +28,7 @@
     <body>
 
         <!-- + TOP SCREEN MENU-->
-        <nav class="navbar navbar-expand navbar-light bg-light border">
+        <nav class="navbar navbar-expand navbar-light bg-light border py-0">
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.usr_id %}
                     <ul class="navbar-nav mr-auto mt-0">
@@ -100,7 +100,7 @@
             {% endif %}
         {% endwith %}
 
-        <main class="container py-2 text-center">
+        <main class="container py-3 text-center">
             {% block main %}{% endblock %}
         </main>
 

@@ -8,7 +8,7 @@ def stmt_sql_get_user():
 
 
 def stmt_sql_get_customers():
-    """Search for user by username provided"""
+    """Retrieve all customers"""
 
     stmt = """
     SELECT
