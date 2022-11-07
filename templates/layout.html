@@ -31,15 +31,21 @@
         <nav class="navbar navbar-expand navbar-light bg-light border py-0">
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.usr_id %}
-                    <ul class="navbar-nav mr-auto mt-0">
-                        {% for href, caption in [('/customers', 'Customers')] %}
+                    <ul class="navbar-nav mr-auto my-1">
+                        {% for href, caption in [('/customers', 'Customers'), ('/customer_info', 'Customer info')] %}
                             {% if s_action == href %}
-                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
+                                {% if href == '/customer_info' %}
+                                    <li class="nav-item border me-1"><a class="nav-link active disabled" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
+                                {% else %}
+                                    <li class="nav-item border me-1"><a class="nav-link active" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
+                                {% endif %}
+                            {% elif href == '/customer_info' %}
+                                <li class="nav-item border me-1"><a class="nav-link disabled" href="{{ href }}">{{ caption }}</a></li>
                             {% else %}
-                                <li class="nav-item"><a class="nav-link" href="{{ href }}">{{ caption }}</a></li>
+                                <li class="nav-item border me-1"><a class="nav-link" href="{{ href }}">{{ caption }}</a></li>
                             {% endif %}
                         {% endfor %}
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown border">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Help</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
@@ -54,7 +60,7 @@
                     </ul>
                     <ul class="navbar-nav ml-auto mt-0">
                         <li class="nav-item"><a class="nav-link disabled" href="">Logged as {{ session.usr_login }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        <li class="nav-item border ms-1"><a class="nav-link" href="/logout">Log Out</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav mr-auto mt-0">

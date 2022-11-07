@@ -50,17 +50,42 @@ def index():
 def customers():
     """List of customers"""
 
-    s_action = request.form.get("submitMode") or "/customers"
+    submitMode = request.form.get("submitMode") or None
 
     if request.method == "POST":
-        if s_action == "/customer_info":
-            return redirect(url_for("customer_info",
-                                    s_action=s_action,
-                                    fname=request.form.get("fname")
-                                    )
-                            )
+        url = "customer_info"
+        s_action = f"/{url}"
+
+        if submitMode == "edit customer info":
+            return redirect(
+                        url_for(
+                            url,
+                            s_action=request.form.get("s_action", s_action),
+                            editmode=request.form.get("editmode", "edit"),
+                            id=request.form.get("id"),
+                            fname=request.form.get("fname"),
+                            lname=request.form.get("lname"),
+                            email=request.form.get("email")
+                        )
+                    )
+
+        if submitMode == "new customer":
+            return redirect(
+                        url_for(
+                            url,
+                            s_action=s_action,
+                            editmode=request.form.get("editmode", "new")
+                        )
+                    )
+
+    s_action = "/customers"
     
-    customers = get_customers()
+    if submitMode == "search customer":
+        # filter customers
+        pass
+
+    else:
+        customers = get_customers()
 
     return render_template("customers.html",
         s_action=request.args.get("s_action", s_action),
@@ -79,7 +104,10 @@ def customer_info():
 
     return render_template("customer_info.html",
         s_action=request.args.get("s_action", s_action),
+        id=request.args.get("id"),
         fname=request.args.get("fname"),
+        lname=request.args.get("lname"),
+        email=request.args.get("email"),
         orders=request.args.get("orders", customer_orders)
         )
 
