@@ -60,12 +60,12 @@ def customers():
             return redirect(
                         url_for(
                             url,
-                            s_action=request.form.get("s_action", s_action),
-                            editmode=request.form.get("editmode", "edit"),
-                            id=request.form.get("id"),
-                            fname=request.form.get("fname"),
-                            lname=request.form.get("lname"),
-                            email=request.form.get("email")
+                            s_action=s_action,
+                            submitMode=request.form.get("submitMode", submitMode),
+                            fname=request.form.get("fname", ''),
+                            lname=request.form.get("lname", ''),
+                            email=request.form.get("email", ''),
+                            id=request.form.get("id", ''),
                         )
                     )
 
@@ -74,22 +74,56 @@ def customers():
                         url_for(
                             url,
                             s_action=s_action,
-                            editmode=request.form.get("editmode", "new")
+                            submitMode=request.form.get("submitMode", submitMode),
+                            fname=request.form.get("fname", ''),
+                            lname=request.form.get("lname", ''),
+                            email=request.form.get("email", ''),
                         )
                     )
 
     s_action = "/customers"
-    
-    if submitMode == "search customer":
-        # filter customers
-        pass
 
-    else:
-        customers = get_customers()
+    # Turn Off customer filters
+    kwargs = {
+        "dont_filter_by_fname": True,
+        "dont_filter_by_lname": True,
+        "dont_filter_by_email": True,
+        "fname": '',
+        "lname": '',
+        "email": '',
+    }
+
+    fname = request.form.get("fname")
+    lname = request.form.get("lname")
+    email = request.form.get("email")
+
+    if submitMode == "search customer":
+        # Turn On customer filters
+        if request.form.get("fname"):
+            kwargs["dont_filter_by_fname"] = False
+            kwargs["fname"] = fname
+
+        if request.form.get("lname"):
+            kwargs["dont_filter_by_lname"] = False
+            kwargs["lname"] = lname
+
+        if request.form.get("email"):
+            kwargs["dont_filter_by_email"] = False
+            kwargs["email"] = email
+
+    if submitMode == "clear filter":
+        fname = ''
+        lname = ''
+        email = ''
+
+    customers = get_customers(kwargs=kwargs)
 
     return render_template("customers.html",
         s_action=request.args.get("s_action", s_action),
-        customers=request.args.get("customers", customers)
+        customers=request.args.get("customers", customers),
+        fname=fname,
+        lname=lname,
+        email=email
         )
 
 
@@ -99,15 +133,27 @@ def customer_info():
     """Customer info"""
     
     s_action = "/customer_info"
+    submitMode = request.form.get("submitMode") or None
+
+    if request.method == "POST":
+        if submitMode == "edit customer info":
+            pass
+        if submitMode == "edit order details":
+            pass
+        if submitMode == "new order":
+            pass
+
+    # submitMode = request.args.get("submitMode")
 
     customer_orders = get_customer_orders(customer_id=1)
 
     return render_template("customer_info.html",
         s_action=request.args.get("s_action", s_action),
-        id=request.args.get("id"),
-        fname=request.args.get("fname"),
-        lname=request.args.get("lname"),
-        email=request.args.get("email"),
+        submitMode = request.args.get("submitMode"),
+        id=request.args.get("id", ''),
+        fname=request.args.get("fname", ''),
+        lname=request.args.get("lname", ''),
+        email=request.args.get("email", ''),
         orders=request.args.get("orders", customer_orders)
         )
 
@@ -203,11 +249,11 @@ def get_user(*, username):
     return rows
 
 
-def get_customers(*args):
-    """Get all customers"""
+def get_customers(*, kwargs):
+    """Get customers. Optionaly filtered"""
 
     stmt = db_requests.stmt_sql_get_customers()
-    rows = db.execute(stmt)
+    rows = db.execute(stmt, **kwargs)
 
     return rows
 
@@ -215,7 +261,11 @@ def get_customers(*args):
 def get_customer_orders(*, customer_id):
     """Search for orders by customer id provided"""
 
-    return ['order1', 'order4']
+    return [
+        {"id": 42, "number": 'order1', "date": ''},
+        {"id": 113, "number": 'order4', "date": ''},
+        {"id": 121, "number": 'order13', "date": ''},
+    ]
 
 @app.route("/logout")
 def logout():

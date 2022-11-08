@@ -17,6 +17,12 @@ def stmt_sql_get_customers():
         customers.ctmr_last_name AS lname,
         customers.ctmr_email AS email
     FROM customers
+    WHERE ((:dont_filter_by_fname)
+            OR (customers.ctmr_first_name=:fname))
+        AND ((:dont_filter_by_lname)
+            OR (customers.ctmr_last_name=:lname))
+        AND ((:dont_filter_by_email)
+            OR (customers.ctmr_email=:email))
     """
 
     return stmt
