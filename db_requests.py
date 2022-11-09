@@ -26,3 +26,14 @@ def stmt_sql_get_customers():
     """
 
     return stmt
+
+
+def stmt_sql_ins_customer():
+    """Insert new customer"""
+
+    stmt = """
+    INSERT INTO customers (ctmr_first_name, ctmr_last_name, ctmr_email)
+    VALUES (:fname, :lname, :email)
+    """
+
+    return stmt
