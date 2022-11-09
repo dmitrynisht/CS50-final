@@ -93,9 +93,9 @@ def customers():
         "email": '',
     }
 
-    fname = request.form.get("fname")
-    lname = request.form.get("lname")
-    email = request.form.get("email")
+    fname = request.form.get("fname") or ""
+    lname = request.form.get("lname") or ""
+    email = request.form.get("email") or ""
 
     if submitMode == "search customer":
         # Turn On customer filters
@@ -135,11 +135,12 @@ def customer_info():
     s_action = "/customer_info"
 
     if request.method == "POST":
-        submitMode = request.form.get("submitMode") or ""
+        submitMode = request.form.get("submitMode", "")
         
-        fname = request.form.get("fname") or ""
-        lname = request.form.get("lname") or ""
-        email = request.form.get("email") or ""
+        ctmr_id = request.form.get("id", "")
+        fname = request.form.get("fname", "")
+        lname = request.form.get("lname", "")
+        email = request.form.get("email", "")
         check_failed = False
         
         if submitMode == "new customer":
@@ -155,52 +156,98 @@ def customer_info():
                 error_msg = "must provide Last name for customer"
                 flash(error_msg)
             
-            # Ensure email was submitted
-            if not email:
-                check_failed = True
-                error_msg = "must provide Email for customer"
-                flash(error_msg)
+            # # Ensure email was submitted
+            # if not email:
+            #     check_failed = True
+            #     error_msg = "must provide Email for customer"
+            #     flash(error_msg)
             
             if check_failed:
                 return render_template("customer_info.html",
                         s_action=s_action,
-                        fname = fname,
-                        lname = lname,
-                        email = email
+                        submitMode=submitMode,
+                        fname=fname,
+                        lname=lname,
+                        email=email
                         )
 
             kwargs = {
+                "dont_filter_by_fname": False,
                 "fname": fname,
+                "dont_filter_by_lname": False,
                 "lname": lname,
+                "dont_filter_by_email": True,
                 "email": email,
             }
-            row = create_customer(kwargs=kwargs)
-            submitMode == "edit customer info"
+            # Query database for customer
+            rows = get_customers(kwargs=kwargs)
+
+            if len(rows) >= 1:
+                # Customer already exists
+                error_msg = "Customer already exists"
+                flash(error_msg)
+                ctmr_id = ""
+            else:
+                kwargs = {
+                    "fname": fname,
+                    "lname": lname,
+                    "email": email,
+                }
+                try:
+                    ctmr_id = create_customer(kwargs=kwargs)
+                    submitMode = "edit customer info"
+                except:
+                    error_msg = "Email already used"
+                    ctmr_id = ""
+                    flash(error_msg)
+
+            customer_orders = []
 
             return render_template("customer_info.html",
-                    s_action=request.args.get("s_action", s_action),
-                    submitMode = submitMode,
-                    fname = fname,
-                    lname = lname,
-                    email = email
+                    s_action=s_action,
+                    submitMode=submitMode,
+                    fname=fname,
+                    lname=lname,
+                    email=email,
+                    id=ctmr_id,
+                    orders=customer_orders
                     )
-                    
+
         elif submitMode == "edit customer info":
             pass
         elif submitMode == "edit order details":
             pass
         elif submitMode == "new order":
             pass
+    
+    else:
+        # request.method == 'GET'
+        s_action = request.args.get("s_action", s_action)
+        submitMode = request.args.get("submitMode", "")
+        fname = request.args.get("fname", "")
+        lname = request.args.get("lname", "")
+        email = request.args.get("email", "")
+        id = request.args.get("id", "")
 
-    customer_orders = get_customer_orders(customer_id=1)
+    if submitMode == "new customer":
+        customer_orders = []
+    elif submitMode == "edit customer info":
+        customer_orders = [] #get_customer_orders(customer_id=id)
+    else:
+        submitMode = "new customer"
+        customer_orders = []
+        fname = ""
+        lname = ""
+        email = ""
+        id = ""
 
     return render_template("customer_info.html",
-            s_action=request.args.get("s_action", s_action),
-            submitMode = request.args.get("submitMode"),
-            id=request.args.get("id", ''),
-            fname=request.args.get("fname", ''),
-            lname=request.args.get("lname", ''),
-            email=request.args.get("email", ''),
+            s_action=s_action,
+            submitMode=submitMode,
+            fname=fname,
+            lname=lname,
+            email=email,
+            id=id,
             orders=request.args.get("orders", customer_orders)
             )
 
