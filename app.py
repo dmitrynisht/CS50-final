@@ -50,7 +50,7 @@ def index():
 def customers():
     """List of customers"""
 
-    submitMode = request.form.get("submitMode") or None
+    submitMode = request.form.get("submitMode", 'clear filter')
 
     if request.method == "POST":
         url = "customer_info"
@@ -83,41 +83,42 @@ def customers():
 
     s_action = "/customers"
 
+    fname = request.form.get("fname", '')
+    lname = request.form.get("lname", '')
+    email = request.form.get("email", '')
+
     # Turn Off customer filters
-    kwargs = {
-        "dont_filter_by_fname": True,
-        "dont_filter_by_lname": True,
-        "dont_filter_by_email": True,
-        "fname": '',
-        "lname": '',
-        "email": '',
-    }
+    # kwargs = {
+    #     "dont_filter_by_fname": True,
+    #     "dont_filter_by_lname": True,
+    #     "dont_filter_by_email": True,
+    #     "fname": '',
+    #     "lname": '',
+    #     "email": '',
+    # }
 
-    fname = request.form.get("fname") or ""
-    lname = request.form.get("lname") or ""
-    email = request.form.get("email") or ""
+    # if submitMode == "search customer":
+    #     # Turn On customer filters
+    #     if request.form.get("fname"):
+    #         kwargs["dont_filter_by_fname"] = False
+    #         kwargs["fname"] = fname
 
-    if submitMode == "search customer":
-        # Turn On customer filters
-        if request.form.get("fname"):
-            kwargs["dont_filter_by_fname"] = False
-            kwargs["fname"] = fname
+    #     if request.form.get("lname"):
+    #         kwargs["dont_filter_by_lname"] = False
+    #         kwargs["lname"] = lname
 
-        if request.form.get("lname"):
-            kwargs["dont_filter_by_lname"] = False
-            kwargs["lname"] = lname
+    #     if request.form.get("email"):
+    #         kwargs["dont_filter_by_email"] = False
+    #         kwargs["email"] = email
 
-        if request.form.get("email"):
-            kwargs["dont_filter_by_email"] = False
-            kwargs["email"] = email
+    customers = get_customers(submitMode=submitMode)
+    # customers = get_customers(kwargs=kwargs)
 
     if submitMode == "clear filter":
         fname = ''
         lname = ''
         email = ''
-
-    customers = get_customers(kwargs=kwargs)
-
+        
     return render_template("customers.html",
         s_action=request.args.get("s_action", s_action),
         customers=request.args.get("customers", customers),
@@ -125,6 +126,36 @@ def customers():
         lname=lname,
         email=email
         )
+
+
+def filter_customers(func):
+    def generate_kwargs(*, submitMode, fname, lname, email, **namedargs):
+        kwargs = {
+            "dont_filter_by_fname": True,
+            "dont_filter_by_lname": True,
+            "dont_filter_by_email": True,
+            "fname": '',
+            "lname": '',
+            "email": '',
+        }
+        if submitMode == "search customer":
+            # Turn On customer filters
+            if request.form.get("fname"):
+                kwargs["dont_filter_by_fname"] = False
+                kwargs["fname"] = fname
+
+            if request.form.get("lname"):
+                kwargs["dont_filter_by_lname"] = False
+                kwargs["lname"] = lname
+
+            if request.form.get("email"):
+                kwargs["dont_filter_by_email"] = False
+                kwargs["email"] = email
+
+        return func(kwargs)
+
+    pass
+    return generate_kwargs
 
 
 @app.route("/customer_info", methods=["GET", "POST"])
@@ -135,12 +166,12 @@ def customer_info():
     s_action = "/customer_info"
 
     if request.method == "POST":
-        submitMode = request.form.get("submitMode", "")
+        submitMode = request.form.get("submitMode", '')
         
-        ctmr_id = request.form.get("id", "")
-        fname = request.form.get("fname", "")
-        lname = request.form.get("lname", "")
-        email = request.form.get("email", "")
+        ctmr_id = request.form.get("id", '')
+        fname = request.form.get("fname", '')
+        lname = request.form.get("lname", '')
+        email = request.form.get("email", '')
         check_failed = False
         
         if submitMode == "new customer":
@@ -343,6 +374,7 @@ def get_user(*, username):
     return rows
 
 
+@filter_customers
 def get_customers(*, kwargs):
     """Get customers. Optionaly filtered"""
 
