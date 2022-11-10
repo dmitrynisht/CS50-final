@@ -8,7 +8,11 @@
     <form action="/customer_info" method="post">
         <div class="input-group mb-1 pt-1">
             <span class="input-group-text" id="basic-addon1">ID</span>
-            <input type="text" class="form-control" disabled placeholder="" aria-label="ID" aria-describedby="basic-addon1" name="id" value="{{ id }}">
+            <input type="text" class="form-control" readonly placeholder="" aria-label="ID" aria-describedby="basic-addon1" name="id" value="{{ id }}">
+        </div>
+        <div class="input-group mb-1">
+            <span class="input-group-text" id="basic-addon1">Unique ID</span>
+            <input type="text" class="form-control" placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="uid" value="{{ uid }}">
         </div>
         <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">First name</span>

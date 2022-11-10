@@ -8,10 +8,11 @@
     <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-1">
         <div class="container-fluid">
             <form class="d-flex" action="/customers" method="post">
+                <input class="form-control me-2" type="search" placeholder="Unique ID" aria-label="Search" name="uid" value="{{ uid }}">
                 <input class="form-control me-2" type="search" placeholder="First name" aria-label="Search" name="fname" value="{{ fname }}">
                 <input class="form-control me-2" type="search" placeholder="Last name" aria-label="Search" name="lname" value="{{ lname }}">
                 <input class="form-control me-2" type="search" placeholder="Email" aria-label="Search" name="email" value="{{ email }}">
-                {% if (fname or lname or email) %}
+                {% if (uid or fname or lname or email) %}
                     <button class="btn btn-outline-success form-control me-2" type="submit" name="submitMode" value="clear filter">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left mb-1" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
@@ -40,6 +41,7 @@
         <thead>
             <tr class="border-bottom-2 border-dark">
                 <th class="text-start" scope="col">ID</th>
+                <th class="text-start" scope="col">Unique ID</th>
                 <th class="text-start" scope="col">First name</th>
                 <th class="text-start" scope="col">Last name</th>
                 <th class="text-start" scope="col">Email</th>
@@ -54,6 +56,10 @@
                         <td class="text-start">
                             <input class="d-none" name="id" type="text" value="{{ row.id }}">
                             {{ row.id }}
+                        </td>
+                        <td class="text-start">
+                            <input class="d-none" name="uid" type="text" value="{{ row.uid }}">
+                            {{ row.uid }}
                         </td>
                         <td class="text-start fname">
                             <input class="d-none" name="fname" type="text" value="{{ row.fname }}">

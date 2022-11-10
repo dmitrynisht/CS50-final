@@ -40,3 +40,15 @@ def stmt_sql_ins_customer():
     """
 
     return stmt
+
+
+def stmt_sql_upd_customer():
+    """Update customer info"""
+
+    stmt = """
+    UPDATE customers
+    SET ctmr_uid=:uid, ctmr_first_name=:fname, ctmr_last_name=:lname, ctmr_email=:email
+    WHERE ctmr_id=:ctmr_id
+    """
+
+    return stmt
