@@ -24,7 +24,7 @@ def mkappdir():
 
 def filter_customers(func):
     """
-    Decorate request for customers via get_customers()
+    Decorate get_customers() to provide kwargs for request
     """
     @wraps(func)
     def generate_kwargs(*, submitMode, fname='', lname='', email='', uid='', **namedargs):
