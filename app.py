@@ -56,7 +56,7 @@ def customers():
         url = "customer_info"
         s_action = f"/{url}"
 
-        if submitMode == "edit customer info":
+        if submitMode in ["new customer", "edit customer info"]:
             return redirect(
                         url_for(
                             url,
@@ -70,18 +70,18 @@ def customers():
                         )
                     )
 
-        if submitMode == "new customer":
-            return redirect(
-                        url_for(
-                            url,
-                            s_action=s_action,
-                            submitMode=request.form.get("submitMode", submitMode),
-                            uid=request.form.get("uid", ''),
-                            fname=request.form.get("fname", ''),
-                            lname=request.form.get("lname", ''),
-                            email=request.form.get("email", ''),
-                        )
-                    )
+        # if submitMode == "new customer":
+        #     return redirect(
+        #                 url_for(
+        #                     url,
+        #                     s_action=s_action,
+        #                     submitMode=request.form.get("submitMode", submitMode),
+        #                     uid=request.form.get("uid", ''),
+        #                     fname=request.form.get("fname", ''),
+        #                     lname=request.form.get("lname", ''),
+        #                     email=request.form.get("email", ''),
+        #                 )
+        #             )
 
     s_action = "/customers"
 
@@ -163,15 +163,15 @@ def customer_info():
                 error_msg = "must provide Last name for customer"
                 flash(error_msg)
 
-            if check_failed:
-                return render_template("customer_info.html",
-                        s_action=s_action,
-                        submitMode=submitMode,
-                        uid=uid,
-                        fname=fname,
-                        lname=lname,
-                        email=email
-                        )
+            # if check_failed:
+            #     return render_template("customer_info.html",
+            #             s_action=s_action,
+            #             submitMode=submitMode,
+            #             uid=uid,
+            #             fname=fname,
+            #             lname=lname,
+            #             email=email
+            #             )
 
             # Ensure uid was submitted
             if not uid:
@@ -185,30 +185,32 @@ def customer_info():
                 error_msg = "must provide Email for customer"
                 flash(error_msg)
             
+            # if check_failed:
+            #     return render_template("customer_info.html",
+            #             s_action=s_action,
+            #             submitMode=submitMode,
+            #             uid=uid,
+            #             fname=fname,
+            #             lname=lname,
+            #             email=email
+            #             )
             if check_failed:
-                return render_template("customer_info.html",
-                        s_action=s_action,
-                        submitMode=submitMode,
-                        uid=uid,
-                        fname=fname,
-                        lname=lname,
-                        email=email
-                        )
+                pass
+            else:
+                # Query customers for email
+                rows = get_customers(submitMode=submitMode, email=email)
+                if len(rows) >= 1:
+                    row = rows[0]
+                    if str(row["id"]) == ctmr_id:
+                        # Lets check if there where other changes
+                        if (row["fname"], row["lname"], row["uid"]) == (fname, lname, uid):
+                            check_failed = True
 
-            # Query customers for email
-            rows = get_customers(submitMode=submitMode, email=email)
-            if len(rows) >= 1:
-                row = rows[0]
-                if str(row["id"]) == ctmr_id:
-                    # Lets check if there where other changes
-                    if (row["fname"], row["lname"], row["uid"]) == (fname, lname, uid):
+                    else:
+                        # Email already used
                         check_failed = True
-
-                else:
-                    # Email already used
-                    check_failed = True
-                    error_msg = "Email already used"
-                    flash(error_msg)
+                        error_msg = "Email already used"
+                        flash(error_msg)
             
             if check_failed:
                 pass
@@ -226,6 +228,26 @@ def customer_info():
                         check_failed = True
                         error_msg = "Unique ID already used"
                         flash(error_msg)
+            
+            # if check_failed:
+            #     return render_template("customer_info.html",
+            #             s_action=s_action,
+            #             submitMode=submitMode,
+            #             uid=uid,
+            #             fname=fname,
+            #             lname=lname,
+            #             email=email
+            #             )
+            if check_failed:
+                return render_template("customer_info.html",
+                        s_action=s_action,
+                        submitMode=submitMode,
+                        uid=uid,
+                        fname=fname,
+                        lname=lname,
+                        email=email,
+                        id=ctmr_id,
+                        )
 
             kwargs = {
                 "uid": uid,
@@ -234,16 +256,15 @@ def customer_info():
                 "email": email,
             }
             if submitMode == "new customer":
-                if check_failed:
-                    return render_template("customer_info.html",
-                            s_action=s_action,
-                            submitMode=submitMode,
-                            uid=uid,
-                            fname=fname,
-                            lname=lname,
-                            email=email
-                            )
-
+                # if check_failed:
+                #     return render_template("customer_info.html",
+                #             s_action=s_action,
+                #             submitMode=submitMode,
+                #             uid=uid,
+                #             fname=fname,
+                #             lname=lname,
+                #             email=email
+                #             )
                 try:
                     ctmr_id = create_customer(kwargs=kwargs)
                     submitMode = "edit customer info"
@@ -255,16 +276,16 @@ def customer_info():
                 customer_orders = []
 
             else:
-                if check_failed:
-                    return render_template("customer_info.html",
-                            s_action=s_action,
-                            submitMode=submitMode,
-                            uid=uid,
-                            fname=fname,
-                            lname=lname,
-                            email=email,
-                            id=ctmr_id,
-                            )
+                # if check_failed:
+                #     return render_template("customer_info.html",
+                #             s_action=s_action,
+                #             submitMode=submitMode,
+                #             uid=uid,
+                #             fname=fname,
+                #             lname=lname,
+                #             email=email,
+                #             id=ctmr_id,
+                #             )
                 kwargs["ctmr_id"] = ctmr_id
                 try:
                     rows = update_customer(kwargs=kwargs)
