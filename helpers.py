@@ -1,4 +1,4 @@
-from flask import redirect, render_template, session
+from flask import flash, redirect, render_template, request, session
 from functools import wraps
 
 
@@ -20,6 +20,101 @@ def mkappdir():
     app_dir_suffix = ''
 
     return mkdtemp(prefix=app_dir_prefix, suffix=app_dir_suffix, dir=dir)
+
+
+def validate_customer(func):
+    """
+    Decorate create_customer() to provide data validation before update/create
+    """
+    @wraps(func)
+    def decorated_function(*args, get_customers, **kwargs):
+        submitMode = request.form.get("submitMode", '')
+        ctmr_id = request.form.get("id", '')
+        uid = request.form.get("uid", '')
+        fname = request.form.get("fname", '')
+        lname = request.form.get("lname", '')
+        email = request.form.get("email", '')
+        check_failed = False
+
+        # Ensure fname was submitted
+        if not fname:
+            check_failed = True
+            error_msg = "must provide First name for customer"
+            flash(error_msg)
+        
+        # Ensure lname was submitted
+        if not lname:
+            check_failed = True
+            error_msg = "must provide Last name for customer"
+            flash(error_msg)
+
+        # Ensure uid was submitted
+        if not uid:
+            check_failed = True
+            if not fname or not lname:
+                error_msg = "must provide Unique Id for customer"
+            else:
+                error_msg = f"must provide Unique Id for customer\nit may look like: 'date{fname[0]}{lname}'"
+            flash(error_msg)
+
+        # Ensure email was submitted
+        if not email:
+            check_failed = True
+            error_msg = "must provide Email for customer"
+            flash(error_msg)
+
+        if check_failed:
+            pass
+        else:
+            # Query customers for email
+            rows = get_customers(submitMode=submitMode, email=email)
+            if len(rows) >= 1:
+                row = rows[0]
+                if str(row["id"]) == ctmr_id:
+                    # Lets check if there where other changes
+                    if (row["fname"], row["lname"], row["uid"]) == (fname, lname, uid):
+                        check_failed = True
+
+                else:
+                    # Email already used
+                    check_failed = True
+                    error_msg = "Email already used"
+                    flash(error_msg)
+            
+        if check_failed:
+            pass
+        else:
+            # Query customers for uid
+            rows = get_customers(submitMode=submitMode, uid=uid)
+            if len(rows) >= 1:
+                row = rows[0]
+                if str(row["id"]) == ctmr_id:
+                    # Lets check if there where other changes
+                    if (row["fname"], row["lname"], row["email"]) == (fname, lname, email):
+                        check_failed = True
+                else:
+                    # uid already used
+                    check_failed = True
+                    error_msg = "Unique ID already used"
+                    flash(error_msg)
+
+        if check_failed:
+            # Implement better Exception handling
+            assert False, "Unverified data!"
+
+        kwargs = {
+            "uid": uid,
+            "fname": fname,
+            "lname": lname,
+            "email": email,
+        }
+
+        if submitMode == "edit customer info":
+            kwargs["ctmr_id"] = ctmr_id
+
+        return func(kwargs=kwargs)
+        
+    return decorated_function
 
 
 def filter_customers(func):

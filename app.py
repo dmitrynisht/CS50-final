@@ -3,7 +3,7 @@ from flask_session import Session
 from cs50 import SQL
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import mkappdir, filter_customers, login_required, apology
+from helpers import mkappdir, filter_customers, validate_customer, login_required, apology
 import db_requests
 
 
@@ -70,49 +70,11 @@ def customers():
                         )
                     )
 
-        # if submitMode == "new customer":
-        #     return redirect(
-        #                 url_for(
-        #                     url,
-        #                     s_action=s_action,
-        #                     submitMode=request.form.get("submitMode", submitMode),
-        #                     uid=request.form.get("uid", ''),
-        #                     fname=request.form.get("fname", ''),
-        #                     lname=request.form.get("lname", ''),
-        #                     email=request.form.get("email", ''),
-        #                 )
-        #             )
-
     s_action = "/customers"
-
     uid = request.form.get("uid", '')
     fname = request.form.get("fname", '')
     lname = request.form.get("lname", '')
     email = request.form.get("email", '')
-
-    # Turn Off customer filters
-    # kwargs = {
-    #     "dont_filter_by_fname": True,
-    #     "dont_filter_by_lname": True,
-    #     "dont_filter_by_email": True,
-    #     "fname": '',
-    #     "lname": '',
-    #     "email": '',
-    # }
-
-    # if submitMode == "search customer":
-    #     # Turn On customer filters
-    #     if request.form.get("fname"):
-    #         kwargs["dont_filter_by_fname"] = False
-    #         kwargs["fname"] = fname
-
-    #     if request.form.get("lname"):
-    #         kwargs["dont_filter_by_lname"] = False
-    #         kwargs["lname"] = lname
-
-    #     if request.form.get("email"):
-    #         kwargs["dont_filter_by_email"] = False
-    #         kwargs["email"] = email
 
     customers = get_customers(submitMode=submitMode, uid=uid, fname=fname, lname=lname, email=email)
     # customers = get_customers(kwargs=kwargs)
@@ -147,89 +109,16 @@ def customer_info():
         fname = request.form.get("fname", '')
         lname = request.form.get("lname", '')
         email = request.form.get("email", '')
-        check_failed = False
-        
+
         if submitMode in ["new customer", "edit customer info"]:
-            # Ensure fname was submitted
-            if not fname:
-                check_failed = True
-                error_msg = "must provide First name for customer"
-                flash(error_msg)
-            
-            # Ensure lname was submitted
-            if not lname:
-                check_failed = True
-                error_msg = "must provide Last name for customer"
-                flash(error_msg)
-
-            # Ensure uid was submitted
-            if not uid:
-                check_failed = True
-                error_msg = f"must provide Unique Id for customer\nit may look like: 'date{fname[0]}{lname}'"
-                flash(error_msg)
-
-            # Ensure email was submitted
-            if not email:
-                check_failed = True
-                error_msg = "must provide Email for customer"
-                flash(error_msg)
-            
-            if check_failed:
-                pass
-            else:
-                # Query customers for email
-                rows = get_customers(submitMode=submitMode, email=email)
-                if len(rows) >= 1:
-                    row = rows[0]
-                    if str(row["id"]) == ctmr_id:
-                        # Lets check if there where other changes
-                        if (row["fname"], row["lname"], row["uid"]) == (fname, lname, uid):
-                            check_failed = True
-
-                    else:
-                        # Email already used
-                        check_failed = True
-                        error_msg = "Email already used"
-                        flash(error_msg)
-            
-            if check_failed:
-                pass
-            else:
-                # Query customers for uid
-                rows = get_customers(submitMode=submitMode, uid=uid)
-                if len(rows) >= 1:
-                    row = rows[0]
-                    if str(row["id"]) == ctmr_id:
-                        # Lets check if there where other changes
-                        if (row["fname"], row["lname"], row["email"]) == (fname, lname, email):
-                            check_failed = True
-                    else:
-                        # uid already used
-                        check_failed = True
-                        error_msg = "Unique ID already used"
-                        flash(error_msg)
-
-            if check_failed:
-                return render_template("customer_info.html",
-                        s_action=s_action,
-                        submitMode=submitMode,
-                        uid=uid,
-                        fname=fname,
-                        lname=lname,
-                        email=email,
-                        id=ctmr_id,
-                        )
-
-            kwargs = {
-                "uid": uid,
-                "fname": fname,
-                "lname": lname,
-                "email": email,
-            }
             if submitMode == "new customer":
                 try:
-                    ctmr_id = create_customer(kwargs=kwargs)
+                    ctmr_id = create_customer(get_customers=get_customers, kwargs={})
                     submitMode = "edit customer info"
+                except AssertionError:
+                    error_msg = "Unverified data!"
+                    ctmr_id = ""
+                    flash(error_msg)
                 except:
                     error_msg = "Customer already exists"
                     ctmr_id = ""
@@ -238,14 +127,21 @@ def customer_info():
                 customer_orders = []
 
             else:
-                kwargs["ctmr_id"] = ctmr_id
+                # Implement better Exception handling:
+                #   when check_failed Exception occured
                 try:
-                    rows = update_customer(kwargs=kwargs)
+                    rows = update_customer(get_customers=get_customers, kwargs={})
+                except AssertionError:
+                    error_msg = "Unverified data!"
+                    flash(error_msg)
                 except:
+                    # Implement better Exception handling:
+                    #   when check_failed Exception occured
                     error_msg = "SOMETHING WENT WRONG!"
                     flash(error_msg)
 
-                customer_orders = get_customer_orders(ctmr_id=ctmr_id)
+                # customer_orders = get_customer_orders(ctmr_id=ctmr_id)
+                customer_orders = []
 
             return render_template("customer_info.html",
                     s_action=s_action,
@@ -399,6 +295,7 @@ def get_customers(*, kwargs):
     return rows
 
 
+@validate_customer
 def create_customer(*, kwargs):
     """"""
 
@@ -408,6 +305,7 @@ def create_customer(*, kwargs):
     return rows
 
 
+@validate_customer
 def update_customer(*, kwargs):
     """"""
     
