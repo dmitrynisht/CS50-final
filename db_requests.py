@@ -52,3 +52,21 @@ def stmt_sql_upd_customer():
     """
 
     return stmt
+
+def stmt_sql_get_customer_orders():
+    """Retrieve orders for customer_id provided"""
+
+    stmt = """
+    SELECT
+        orders.svc_ord_id AS ord_id,
+        orders.svc_ord_number AS ord_number,
+        orders.svc_ord_date AS ord_date,
+        orders.svcos_name AS ord_status,
+        orders.ctmr_id AS ctmr_id
+    FROM service_orders AS orders
+    WHERE (orders.ctmr_id=:ctmr_id))
+    """
+    # WHERE ((:dont_filter_by_ctmr_id)
+    #         OR (orders.ctmr_id=:ctmr_id))
+
+    return stmt

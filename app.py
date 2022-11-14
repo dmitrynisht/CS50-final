@@ -315,14 +315,13 @@ def update_customer(*, kwargs):
     return rows
 
 
-def get_customer_orders(*, ctmr_id):
+def get_customer_orders(*, kwargs):
     """Search for orders by customer id provided"""
 
-    return [
-        {"id": 42, "number": 'order1', "date": ''},
-        {"id": 113, "number": 'order4', "date": ''},
-        {"id": 121, "number": 'order13', "date": ''},
-    ]
+    stmt = db_requests.stmt_get_customer_orders()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
 
 @app.route("/logout")
 def logout():
