@@ -5,28 +5,28 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/customer_info" method="post">
+    <form action="/svc_order_details" method="post">
         <div class="input-group mb-1 pt-1">
             <span class="input-group-text" id="basic-addon1">ID</span>
             <input type="text" class="form-control" readonly placeholder="" aria-label="ID" aria-describedby="basic-addon1" name="id" value="{{ id }}">
         </div>
-        <div class="input-group mb-1">
+        <!-- <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Unique ID</span>
             <input type="text" class="form-control" placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="uid" value="{{ uid }}">
-        </div>
-        <div class="input-group mb-1">
+        </div> -->
+        <!-- <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">First name</span>
             <input type="text" class="form-control" placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="fname" value="{{ fname }}">
-        </div>
-        <div class="input-group mb-1">
+        </div> -->
+        <!-- <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Last name</span>
             <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="lname" value="{{ lname }}">
-        </div>
-        <div class="input-group mb-1">
+        </div> -->
+        <!-- <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Email</span>
             <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" value="{{ email }}">
-        </div>
-        <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
+        </div> -->
+        <!-- <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
             <div class="container-fluid">
                 <button class="btn btn-outline-success" type="submit" name="submitMode" value="{{ submitMode }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square mb-1" viewBox="0 0 16 16">
@@ -40,18 +40,18 @@
                     {% endif %}
                 </button>
             </div>
-        </nav>
+        </nav> -->
     </form>
-    {% if submitMode == "edit customer info" %}
-        {% if orders %}
-            <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+    <!-- {% if submitMode == "edit customer info" %} -->
+        <!-- {% if orders %} -->
+            <!-- <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                 <div class="container-fluid">
                 <span class="navbar-text">
                     Customer orders
                 </span>
                 </div>
-            </nav>
-            <table class="table table-hover table-bordered caption-top mb-0">
+            </nav> -->
+            <!-- <table class="table table-hover table-bordered caption-top mb-0">
                 <thead>
                     <tr class="border-bottom-2 border-dark">
                         <th class="text-start" scope="col">ID</th>
@@ -63,17 +63,17 @@
                 <tbody>
                 {% for row in orders %}
                     <tr>
-                        <form action="/customer_info" method="post">
+                        <form action="/customers_info" method="post">
                             <td class="text-start">
-                                <input class="d-none" name="ord_id" type="text" value="{{ row.ord_id }}">
+                                <input class="d-none" name="order" type="text" value="{{ row.ord_id }}">
                                 {{ row.ord_id }}
                             </td>
                             <td class="text-start">
-                                <input class="d-none" name="ord_number" type="text" value="{{ row.ord_number }}">
+                                <input class="d-none" name="order" type="text" value="{{ row.ord_number }}">
                                 {{ row.ord_number }}
                             </td>
                             <td class="text-start">
-                                <input class="d-none" name="ord_date" type="datetime" value="{{ row.ord_date }}">
+                                <input class="d-none" name="order" type="datetime" value="{{ row.ord_date }}">
                                 {{ row.ord_date }}
                             </td>
                             <td class="text-center">
@@ -88,17 +88,17 @@
                     </tr>
                 {% endfor %}
                 </tbody>    
-            </table>
-        {% else %}
-            <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+            </table> -->
+        <!-- {% else %} -->
+            <!-- <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                 <div class="container-fluid">
                 <span class="navbar-text">
                     No orders yet
                 </span>
                 </div>
-            </nav>
-        {% endif %}
-        <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-3 pb-0">
+            </nav> -->
+        <!-- {% endif %} -->
+        <!-- <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-3 pb-0">
             <div class="container-fluid">
                 <form class="d-flex" action="/customer_info" method="post">
                     <button class="btn btn-outline-success" type="submit" name="submitMode" value="new order">
@@ -109,6 +109,6 @@
                     </button>
                 </form>
             </div>
-        </nav>
-    {% endif %}
+        </nav> -->
+    <!-- {% endif %} -->
 {% endblock %}

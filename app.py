@@ -156,6 +156,21 @@ def customer_info():
                     )
 
         elif submitMode == "edit order details":
+            url = "svc_order_details"
+            s_action = f"/{url}"
+            return redirect(
+                        url_for(
+                            url,
+                            s_action=s_action,
+                            submitMode=submitMode,
+                            id=request.form.get("ord_id", ''),
+                            # uid=request.form.get("uid", ''),
+                            # fname=request.form.get("fname", ''),
+                            # lname=request.form.get("lname", ''),
+                            # email=request.form.get("email", ''),
+                            # id=request.form.get("id", ''),
+                        )
+                    )
             pass
         elif submitMode == "new order":
             pass
@@ -170,10 +185,7 @@ def customer_info():
         lname = request.args.get("lname", '')
         email = request.args.get("email", '')
 
-    if submitMode == "new customer":
-        customer_orders = []
-    elif submitMode == "edit customer info":
-        # customer_orders = []
+    if submitMode == "edit customer info":
         customer_orders = get_customer_orders(ctmr_id=ctmr_id)
     else:
         submitMode = "new customer"
@@ -196,6 +208,21 @@ def customer_info():
             )
 
 
+@app.route("/svc_order_details", methods=["GET", "POST"])
+@login_required
+def svc_order_details():
+    """Order details"""
+
+    s_action = "/svc_order_details"
+    submitMode = request.args.get("submitMode", '')
+
+    return render_template("svc_order_details.html",
+            s_action=s_action,
+            submitMode=submitMode,
+            id=request.args.get("id", ''),
+            )
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -206,26 +233,6 @@ def login():
     if 'usr_id' in session:
         session.clear()
     
-    ###-start-#######################
-    opengate = False
-    # opengate = True
-    if opengate:
-        # temp gate: user_id provided or not provided
-        #   if not provided - testing /login route
-        #   if provided - ommiting /login route - testing /index
-        authenticated = False
-        authenticated = True
-        if authenticated:
-            session["usr_id"] = 1
-            session["usr_login"] = "admin"
-            # Redirect user to home page
-            return redirect("/")
-        else:
-            # User reached route via GET (as by clicking a link or via redirect)
-            return render_template("login.html", s_action=s_action)
-    ###-finish-#######################
-
-    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         
         username = request.form.get("username")

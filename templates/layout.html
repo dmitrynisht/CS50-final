@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.usr_id %}
                     <ul class="navbar-nav mr-auto my-1">
-                        {% for href, caption in [('/customers', 'Customers'), ('/customer_info', 'Customer info')] %}
+                        {% for href, caption in [('/customers', 'Customers'), ('/customer_info', 'Customer info'), ('/svc_order_details', 'Order details')] %}
                             {% if s_action == href %}
                                 {% if href == '/customer_info' %}
                                     <li class="nav-item border me-1"><a class="nav-link active disabled" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
