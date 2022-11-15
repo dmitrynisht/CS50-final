@@ -3,6 +3,7 @@ from flask_session import Session
 from cs50 import SQL
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime as dt
 from helpers import mkappdir, filter_customers, validate_customer, login_required, apology
 import db_requests
 
@@ -140,8 +141,8 @@ def customer_info():
                     error_msg = "SOMETHING WENT WRONG!"
                     flash(error_msg)
 
-                # customer_orders = get_customer_orders(ctmr_id=ctmr_id)
-                customer_orders = []
+                customer_orders = get_customer_orders(ctmr_id=ctmr_id)
+                # customer_orders = []
 
             return render_template("customer_info.html",
                     s_action=s_action,
@@ -163,7 +164,7 @@ def customer_info():
         # request.method == 'GET'
         s_action = request.args.get("s_action", s_action)
         submitMode = request.args.get("submitMode", '')
-        id = request.args.get("id", '')
+        ctmr_id = request.args.get("id", '')
         uid = request.args.get("uid", '')
         fname = request.args.get("fname", '')
         lname = request.args.get("lname", '')
@@ -172,14 +173,15 @@ def customer_info():
     if submitMode == "new customer":
         customer_orders = []
     elif submitMode == "edit customer info":
-        customer_orders = [] #get_customer_orders(customer_id=id)
+        # customer_orders = []
+        customer_orders = get_customer_orders(ctmr_id=ctmr_id)
     else:
         submitMode = "new customer"
         customer_orders = []
         fname = ""
         lname = ""
         email = ""
-        id = ""
+        ctmr_id = ""
         uid = ""
 
     return render_template("customer_info.html",
@@ -189,7 +191,7 @@ def customer_info():
             fname=fname,
             lname=lname,
             email=email,
-            id=id,
+            id=ctmr_id,
             orders=request.args.get("orders", customer_orders)
             )
 
@@ -315,10 +317,10 @@ def update_customer(*, kwargs):
     return rows
 
 
-def get_customer_orders(*, kwargs):
+def get_customer_orders(**kwargs):
     """Search for orders by customer id provided"""
 
-    stmt = db_requests.stmt_get_customer_orders()
+    stmt = db_requests.stmt_sql_get_customer_orders()
     rows = db.execute(stmt, **kwargs)
     
     return rows
@@ -350,7 +352,15 @@ def main(argv=None):
     # with app.test_request_context():
     #     testingrequests()
     # generate_password_hash(request.form.get("password"))
-    
+    # from datetime import datetime as dt
+    # from datetime import timezone
+    # transacted = dt.now(timezone.utc).isoformat()
+    # ordered = dt.now().isoformat()
+    # date_string = '2022-10-14T09:01:40.319631'
+    # vartime = dt.fromisoformat(date_string)
+
+    pass
+
     # Start app
     app.run(debug=True)
 

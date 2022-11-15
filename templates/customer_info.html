@@ -65,16 +65,16 @@
                     <tr>
                         <form action="/customers_info" method="post">
                             <td class="text-start">
-                                <input class="d-none" name="order" type="text" value="{{ row.id }}">
-                                {{ row.id }}
+                                <input class="d-none" name="order" type="text" value="{{ row.ord_id }}">
+                                {{ row.ord_id }}
                             </td>
                             <td class="text-start">
-                                <input class="d-none" name="order" type="text" value="{{ row.number }}">
-                                {{ row.number }}
+                                <input class="d-none" name="order" type="text" value="{{ row.ord_number }}">
+                                {{ row.ord_number }}
                             </td>
                             <td class="text-start">
-                                <input class="d-none" name="order" type="text" value="{{ row.date }}">
-                                {{ row.date }}
+                                <input class="d-none" name="order" type="datetime" value="{{ row.ord_date }}">
+                                {{ row.ord_date }}
                             </td>
                             <td class="text-center">
                                 <button class="btn btn-outline-secondary btn-sm" type="submit" name="submitMode" value="edit order details">
