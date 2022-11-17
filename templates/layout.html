@@ -34,12 +34,12 @@
                     <ul class="navbar-nav mr-auto my-1">
                         {% for href, caption in [('/customers', 'Customers'), ('/customer_info', 'Customer info'), ('/svc_order_details', 'Order details')] %}
                             {% if s_action == href %}
-                                {% if href == '/customer_info' %}
+                                {% if href in ['/customer_info', '/svc_order_details'] %}
                                     <li class="nav-item border me-1"><a class="nav-link active disabled" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
                                 {% else %}
                                     <li class="nav-item border me-1"><a class="nav-link active" aria-current="page" href="{{ href }}">{{ caption }}</a></li>
                                 {% endif %}
-                            {% elif href == '/customer_info' %}
+                            {% elif href in ['/customer_info', '/svc_order_details'] %}
                                 <li class="nav-item border me-1"><a class="nav-link disabled" href="{{ href }}">{{ caption }}</a></li>
                             {% else %}
                                 <li class="nav-item border me-1"><a class="nav-link" href="{{ href }}">{{ caption }}</a></li>

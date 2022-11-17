@@ -29,36 +29,36 @@ def validate_customer(func):
     @wraps(func)
     def decorated_function(*args, get_customers, **kwargs):
         submitMode = request.form.get("submitMode", '')
-        ctmr_id = request.form.get("id", '')
-        uid = request.form.get("uid", '')
-        fname = request.form.get("fname", '')
-        lname = request.form.get("lname", '')
-        email = request.form.get("email", '')
+        ctmr_id = request.form.get("ctmr_id", '')
+        ctmr_uid = request.form.get("ctmr_uid", '')
+        ctmr_fname = request.form.get("ctmr_fname", '')
+        ctmr_lname = request.form.get("ctmr_lname", '')
+        ctmr_email = request.form.get("ctmr_email", '')
         check_failed = False
 
         # Ensure fname was submitted
-        if not fname:
+        if not ctmr_fname:
             check_failed = True
             error_msg = "must provide First name for customer"
             flash(error_msg)
         
         # Ensure lname was submitted
-        if not lname:
+        if not ctmr_lname:
             check_failed = True
             error_msg = "must provide Last name for customer"
             flash(error_msg)
 
         # Ensure uid was submitted
-        if not uid:
+        if not ctmr_uid:
             check_failed = True
-            if not fname or not lname:
+            if not ctmr_fname or not ctmr_lname:
                 error_msg = "must provide Unique Id for customer"
             else:
-                error_msg = f"must provide Unique Id for customer\nit may look like: 'date{fname[0]}{lname}'"
+                error_msg = f"must provide Unique Id for customer\nit may look like: 'date{ctmr_fname[0]}{ctmr_lname}'"
             flash(error_msg)
 
         # Ensure email was submitted
-        if not email:
+        if not ctmr_email:
             check_failed = True
             error_msg = "must provide Email for customer"
             flash(error_msg)
@@ -67,12 +67,12 @@ def validate_customer(func):
             pass
         else:
             # Query customers for email
-            rows = get_customers(submitMode=submitMode, email=email)
+            rows = get_customers(submitMode=submitMode, ctmr_email=ctmr_email)
             if len(rows) >= 1:
                 row = rows[0]
-                if str(row["id"]) == ctmr_id:
+                if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["fname"], row["lname"], row["uid"]) == (fname, lname, uid):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_uid"]) == (ctmr_fname, ctmr_lname, ctmr_uid):
                         check_failed = True
 
                 else:
@@ -85,12 +85,12 @@ def validate_customer(func):
             pass
         else:
             # Query customers for uid
-            rows = get_customers(submitMode=submitMode, uid=uid)
+            rows = get_customers(submitMode=submitMode, ctmr_uid=ctmr_uid)
             if len(rows) >= 1:
                 row = rows[0]
-                if str(row["id"]) == ctmr_id:
+                if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["fname"], row["lname"], row["email"]) == (fname, lname, email):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_email"]) == (ctmr_fname, ctmr_lname, ctmr_email):
                         check_failed = True
                 else:
                     # uid already used
@@ -103,10 +103,10 @@ def validate_customer(func):
             assert False, "Unverified data!"
 
         kwargs = {
-            "uid": uid,
-            "fname": fname,
-            "lname": lname,
-            "email": email,
+            "ctmr_uid": ctmr_uid,
+            "ctmr_fname": ctmr_fname,
+            "ctmr_lname": ctmr_lname,
+            "ctmr_email": ctmr_email,
         }
 
         if submitMode == "edit customer info":
@@ -122,44 +122,44 @@ def filter_customers(func):
     Decorate get_customers() to provide kwargs for request
     """
     @wraps(func)
-    def generate_kwargs(*, submitMode, fname='', lname='', email='', uid='', **namedargs):
+    def generate_kwargs(*, submitMode, ctmr_fname='', ctmr_lname='', ctmr_email='', ctmr_uid='', **namedargs):
         kwargs = {
             "dont_filter_by_uid": True,
             "dont_filter_by_fname": True,
             "dont_filter_by_lname": True,
             "dont_filter_by_email": True,
-            "uid": '',
-            "fname": '',
-            "lname": '',
-            "email": '',
+            "ctmr_uid": '',
+            "ctmr_fname": '',
+            "ctmr_lname": '',
+            "ctmr_email": '',
         }
         
         # Turn On customer filters
         if submitMode == "search customer":
-            if uid:
+            if ctmr_uid:
                 kwargs["dont_filter_by_uid"] = False
-                kwargs["uid"] = uid
+                kwargs["ctmr_uid"] = ctmr_uid
 
-            if fname:
+            if ctmr_fname:
                 kwargs["dont_filter_by_fname"] = False
-                kwargs["fname"] = fname
+                kwargs["ctmr_fname"] = ctmr_fname
 
-            if lname:
+            if ctmr_lname:
                 kwargs["dont_filter_by_lname"] = False
-                kwargs["lname"] = lname
+                kwargs["ctmr_lname"] = ctmr_lname
 
-            if email:
+            if ctmr_email:
                 kwargs["dont_filter_by_email"] = False
-                kwargs["email"] = email
+                kwargs["ctmr_email"] = ctmr_email
 
         if submitMode in ["new customer", "edit customer info"]:
-            if email:
+            if ctmr_email:
                 kwargs["dont_filter_by_email"] = False
-                kwargs["email"] = email
+                kwargs["ctmr_email"] = ctmr_email
             
-            if uid:
+            if ctmr_uid:
                 kwargs["dont_filter_by_uid"] = False
-                kwargs["uid"] = uid
+                kwargs["ctmr_uid"] = ctmr_uid
 
         return func(kwargs=kwargs)
 

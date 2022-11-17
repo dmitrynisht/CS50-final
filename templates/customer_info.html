@@ -1,30 +1,30 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Customers
+    Customer info
 {% endblock %}
 
 {% block main %}
     <form action="/customer_info" method="post">
         <div class="input-group mb-1 pt-1">
             <span class="input-group-text" id="basic-addon1">ID</span>
-            <input type="text" class="form-control" readonly placeholder="" aria-label="ID" aria-describedby="basic-addon1" name="id" value="{{ id }}">
+            <input type="text" class="form-control ctmr_id" readonly placeholder="" aria-label="ID" aria-describedby="basic-addon1" name="ctmr_id" value="{{ ctmr_id }}">
         </div>
         <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Unique ID</span>
-            <input type="text" class="form-control" placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="uid" value="{{ uid }}">
+            <input type="text" class="form-control ctmr_uid" placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="ctmr_uid" value="{{ ctmr_uid }}">
         </div>
         <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">First name</span>
-            <input type="text" class="form-control" placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="fname" value="{{ fname }}">
+            <input type="text" class="form-control ctmr_fname" placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="ctmr_fname" value="{{ ctmr_fname }}">
         </div>
         <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Last name</span>
-            <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="lname" value="{{ lname }}">
+            <input type="text" class="form-control ctmr_lname" placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="ctmr_lname" value="{{ ctmr_lname }}">
         </div>
         <div class="input-group mb-1">
             <span class="input-group-text" id="basic-addon1">Email</span>
-            <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" value="{{ email }}">
+            <input type="text" class="form-control ctmr_email" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
         </div>
         <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
             <div class="container-fluid">
@@ -46,9 +46,9 @@
         {% if orders %}
             <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                 <div class="container-fluid">
-                <span class="navbar-text">
-                    Customer orders
-                </span>
+                    <span class="navbar-text">
+                        Customer orders
+                    </span>
                 </div>
             </nav>
             <table class="table table-hover table-bordered caption-top mb-0">
@@ -63,7 +63,7 @@
                 <tbody>
                 {% for row in orders %}
                     <tr>
-                        <form action="/customer_info" method="post">
+                        <form action="/customer_info" method="post" class = "order">
                             <td class="text-start">
                                 <input class="d-none" name="ord_id" type="text" value="{{ row.ord_id }}">
                                 {{ row.ord_id }}
@@ -77,7 +77,7 @@
                                 {{ row.ord_date }}
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-outline-secondary btn-sm" type="submit" name="submitMode" value="edit order details">
+                                <button class="btn btn-outline-secondary btn-sm details" type="submit" name="submitMode" value="edit order details">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                     </svg>
@@ -111,4 +111,27 @@
             </div>
         </nav>
     {% endif %}
+
+    <script>
+        let ctmr_id = document.querySelector(`input.ctmr_id`).value;
+        let ctmr_uid = document.querySelector(`input.ctmr_uid`).value;
+        let ctmr_fname = document.querySelector(`input.ctmr_fname`).value;
+        let ctmr_lname = document.querySelector(`input.ctmr_lname`).value;
+        let ctmr_email = document.querySelector(`input.ctmr_email`).value;
+        let OrdDetailForms = document.querySelectorAll(`form.order`);
+        for (let frmOrder of OrdDetailForms) {
+            frmOrder.addEventListener('submit', function(event)
+            {   
+                // event.preventDefault();
+                // alert("submit happened");
+                frmOrder.action = frmOrder.action +
+                '?ctmr_id=' + ctmr_id +
+                '&ctmr_uid=' + ctmr_uid +
+                '&ctmr_fname=' + ctmr_fname +
+                '&ctmr_lname=' + ctmr_lname +
+                '&ctmr_email=' + ctmr_email;
+            });
+        }
+    </script>
+
 {% endblock %}

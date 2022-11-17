@@ -12,20 +12,20 @@ def stmt_sql_get_customers():
 
     stmt = """
     SELECT
-        customers.ctmr_id AS id,
-        customers.ctmr_uid AS uid,
-        customers.ctmr_first_name AS fname,
-        customers.ctmr_last_name AS lname,
-        customers.ctmr_email AS email
+        customers.ctmr_id AS ctmr_id,
+        customers.ctmr_uid AS ctmr_uid,
+        customers.ctmr_first_name AS ctmr_fname,
+        customers.ctmr_last_name AS ctmr_lname,
+        customers.ctmr_email AS ctmr_email
     FROM customers
     WHERE ((:dont_filter_by_uid)
-            OR (customers.ctmr_uid=:uid))
+            OR (customers.ctmr_uid=:ctmr_uid))
         AND ((:dont_filter_by_fname)
-            OR (customers.ctmr_first_name=:fname))
+            OR (customers.ctmr_first_name=:ctmr_fname))
         AND ((:dont_filter_by_lname)
-            OR (customers.ctmr_last_name=:lname))
+            OR (customers.ctmr_last_name=:ctmr_lname))
         AND ((:dont_filter_by_email)
-            OR (customers.ctmr_email=:email))
+            OR (customers.ctmr_email=:ctmr_email))
     """
 
     return stmt
@@ -36,7 +36,7 @@ def stmt_sql_ins_customer():
 
     stmt = """
     INSERT INTO customers (ctmr_uid, ctmr_first_name, ctmr_last_name, ctmr_email)
-    VALUES (:uid, :fname, :lname, :email)
+    VALUES (:ctmr_uid, :ctmr_fname, :ctmr_lname, :ctmr_email)
     """
 
     return stmt
@@ -47,7 +47,7 @@ def stmt_sql_upd_customer():
 
     stmt = """
     UPDATE customers
-    SET ctmr_uid=:uid, ctmr_first_name=:fname, ctmr_last_name=:lname, ctmr_email=:email
+    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email
     WHERE ctmr_id=:ctmr_id
     """
 

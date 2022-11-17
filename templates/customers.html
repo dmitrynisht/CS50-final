@@ -8,10 +8,10 @@
     <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-1">
         <div class="container-fluid">
             <form class="d-flex" action="/customers" method="post">
-                <input class="form-control me-2" type="search" placeholder="Unique ID" aria-label="Search" name="uid" value="{{ uid }}">
-                <input class="form-control me-2" type="search" placeholder="First name" aria-label="Search" name="fname" value="{{ fname }}">
-                <input class="form-control me-2" type="search" placeholder="Last name" aria-label="Search" name="lname" value="{{ lname }}">
-                <input class="form-control me-2" type="search" placeholder="Email" aria-label="Search" name="email" value="{{ email }}">
+                <input class="form-control me-2" type="search" placeholder="Unique ID" aria-label="Search" name="ctmr_uid" value="{{ ctmr_uid }}">
+                <input class="form-control me-2" type="search" placeholder="First name" aria-label="Search" name="ctmr_fname" value="{{ ctmr_fname }}">
+                <input class="form-control me-2" type="search" placeholder="Last name" aria-label="Search" name="ctmr_lname" value="{{ ctmr_lname }}">
+                <input class="form-control me-2" type="search" placeholder="Email" aria-label="Search" name="ctmr_email" value="{{ ctmr_email }}">
                 {% if (uid or fname or lname or email) %}
                     <button class="btn btn-outline-success form-control me-2" type="submit" name="submitMode" value="clear filter">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left mb-1" viewBox="0 0 16 16">
@@ -54,24 +54,24 @@
                 <tr>
                     <form action="/customers" method="post">
                         <td class="text-start">
-                            <input class="d-none" name="id" type="text" value="{{ row.id }}">
-                            {{ row.id }}
+                            <input class="d-none" name="ctmr_id" type="text" value="{{ row.ctmr_id }}">
+                            {{ row.ctmr_id }}
                         </td>
                         <td class="text-start">
-                            <input class="d-none" name="uid" type="text" value="{{ row.uid }}">
-                            {{ row.uid }}
-                        </td>
-                        <td class="text-start fname">
-                            <input class="d-none" name="fname" type="text" value="{{ row.fname }}">
-                            {{ row.fname }}
+                            <input class="d-none" name="ctmr_uid" type="text" value="{{ row.ctmr_uid }}">
+                            {{ row.ctmr_uid }}
                         </td>
                         <td class="text-start">
-                            <input class="d-none" name="lname" type="text" value="{{ row.lname }}">
-                            {{ row.lname }}
+                            <input class="d-none" name="ctmr_fname" type="text" value="{{ row.ctmr_fname }}">
+                            {{ row.ctmr_fname }}
                         </td>
                         <td class="text-start">
-                            <input class="d-none" name="email" type="text" value="{{ row.email }}">
-                            {{ row.email }}
+                            <input class="d-none" name="ctmr_lname" type="text" value="{{ row.ctmr_lname }}">
+                            {{ row.ctmr_lname }}
+                        </td>
+                        <td class="text-start">
+                            <input class="d-none" name="ctmr_email" type="text" value="{{ row.ctmr_email }}">
+                            {{ row.ctmr_email }}
                         </td>
                         <td class="text-center">
                             <button class="btn btn-outline-secondary btn-sm" type="submit" name="submitMode" value="edit customer info">

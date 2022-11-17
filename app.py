@@ -63,36 +63,36 @@ def customers():
                             url,
                             s_action=s_action,
                             submitMode=request.form.get("submitMode", submitMode),
-                            uid=request.form.get("uid", ''),
-                            fname=request.form.get("fname", ''),
-                            lname=request.form.get("lname", ''),
-                            email=request.form.get("email", ''),
-                            id=request.form.get("id", ''),
+                            ctmr_uid=request.form.get("ctmr_uid", ''),
+                            ctmr_fname=request.form.get("ctmr_fname", ''),
+                            ctmr_lname=request.form.get("ctmr_lname", ''),
+                            ctmr_email=request.form.get("ctmr_email", ''),
+                            ctmr_id=request.form.get("ctmr_id", ''),
                         )
                     )
 
     s_action = "/customers"
-    uid = request.form.get("uid", '')
-    fname = request.form.get("fname", '')
-    lname = request.form.get("lname", '')
-    email = request.form.get("email", '')
+    ctmr_uid = request.form.get("ctmr_uid", '')
+    ctmr_fname = request.form.get("ctmr_fname", '')
+    ctmr_lname = request.form.get("ctmr_lname", '')
+    ctmr_email = request.form.get("ctmr_email", '')
 
-    customers = get_customers(submitMode=submitMode, uid=uid, fname=fname, lname=lname, email=email)
+    customers = get_customers(submitMode=submitMode, ctmr_uid=ctmr_uid, ctmr_fname=ctmr_fname, ctmr_lname=ctmr_lname, ctmr_email=ctmr_email)
     # customers = get_customers(kwargs=kwargs)
 
     if submitMode == "clear filter":
-        uid = ''
-        fname = ''
-        lname = ''
-        email = ''
+        ctmr_uid = ''
+        ctmr_fname = ''
+        ctmr_lname = ''
+        ctmr_email = ''
         
     return render_template("customers.html",
         s_action=request.args.get("s_action", s_action),
         customers=request.args.get("customers", customers),
-        uid=uid,
-        fname=fname,
-        lname=lname,
-        email=email
+        ctmr_uid=ctmr_uid,
+        ctmr_fname=ctmr_fname,
+        ctmr_lname=ctmr_lname,
+        ctmr_email=ctmr_email
         )
 
 
@@ -105,13 +105,13 @@ def customer_info():
 
     if request.method == "POST":
         submitMode = request.form.get("submitMode", '')
-        ctmr_id = request.form.get("id", '')
-        uid = request.form.get("uid", '')
-        fname = request.form.get("fname", '')
-        lname = request.form.get("lname", '')
-        email = request.form.get("email", '')
 
         if submitMode in ["new customer", "edit customer info"]:
+            ctmr_id = request.form.get("ctmr_id", '')
+            ctmr_uid = request.form.get("ctmr_uid", '')
+            ctmr_fname = request.form.get("ctmr_fname", '')
+            ctmr_lname = request.form.get("ctmr_lname", '')
+            ctmr_email = request.form.get("ctmr_email", '')
             if submitMode == "new customer":
                 try:
                     ctmr_id = create_customer(get_customers=get_customers, kwargs={})
@@ -147,11 +147,11 @@ def customer_info():
             return render_template("customer_info.html",
                     s_action=s_action,
                     submitMode=submitMode,
-                    uid=uid,
-                    fname=fname,
-                    lname=lname,
-                    email=email,
-                    id=ctmr_id,
+                    ctmr_uid=ctmr_uid,
+                    ctmr_fname=ctmr_fname,
+                    ctmr_lname=ctmr_lname,
+                    ctmr_email=ctmr_email,
+                    ctmr_id=ctmr_id,
                     orders=customer_orders
                     )
 
@@ -163,15 +163,15 @@ def customer_info():
                             url,
                             s_action=s_action,
                             submitMode=submitMode,
-                            id=request.form.get("ord_id", ''),
-                            # uid=request.form.get("uid", ''),
-                            # fname=request.form.get("fname", ''),
-                            # lname=request.form.get("lname", ''),
-                            # email=request.form.get("email", ''),
-                            # id=request.form.get("id", ''),
+                            ord_id=request.form.get("ord_id", ''),
+                            ord_number=request.form.get("ord_number", ''),
+                            ctmr_uid=request.args.get("ctmr_uid", ''),
+                            ctmr_fname=request.args.get("ctmr_fname", ''),
+                            ctmr_lname=request.args.get("ctmr_lname", ''),
+                            ctmr_email=request.args.get("ctmr_email", ''),
+                            ctmr_id=request.args.get("ctmr_id", ''),
                         )
                     )
-            pass
         elif submitMode == "new order":
             pass
     
@@ -179,31 +179,31 @@ def customer_info():
         # request.method == 'GET'
         s_action = request.args.get("s_action", s_action)
         submitMode = request.args.get("submitMode", '')
-        ctmr_id = request.args.get("id", '')
-        uid = request.args.get("uid", '')
-        fname = request.args.get("fname", '')
-        lname = request.args.get("lname", '')
-        email = request.args.get("email", '')
+        ctmr_id = request.args.get("ctmr_id", '')
+        ctmr_uid = request.args.get("ctmr_uid", '')
+        ctmr_fname = request.args.get("ctmr_fname", '')
+        ctmr_lname = request.args.get("ctmr_lname", '')
+        ctmr_email = request.args.get("ctmr_email", '')
 
     if submitMode == "edit customer info":
         customer_orders = get_customer_orders(ctmr_id=ctmr_id)
     else:
         submitMode = "new customer"
         customer_orders = []
-        fname = ""
-        lname = ""
-        email = ""
+        ctmr_fname = ""
+        ctmr_lname = ""
+        ctmr_email = ""
         ctmr_id = ""
-        uid = ""
+        ctmr_uid = ""
 
     return render_template("customer_info.html",
             s_action=s_action,
             submitMode=submitMode,
-            uid=uid,
-            fname=fname,
-            lname=lname,
-            email=email,
-            id=ctmr_id,
+            ctmr_uid=ctmr_uid,
+            ctmr_fname=ctmr_fname,
+            ctmr_lname=ctmr_lname,
+            ctmr_email=ctmr_email,
+            ctmr_id=ctmr_id,
             orders=request.args.get("orders", customer_orders)
             )
 
@@ -219,7 +219,10 @@ def svc_order_details():
     return render_template("svc_order_details.html",
             s_action=s_action,
             submitMode=submitMode,
-            id=request.args.get("id", ''),
+            ord_id=request.args.get("ord_id", ''),
+            ord_number=request.args.get("ord_number", ''),
+            ctmr_fname=request.args.get("ctmr_fname", ''),
+            ctmr_lname=request.args.get("ctmr_lname", ''),
             )
 
 
