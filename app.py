@@ -165,6 +165,7 @@ def customer_info():
                             submitMode=submitMode,
                             ord_id=request.form.get("ord_id", ''),
                             ord_number=request.form.get("ord_number", ''),
+                            ord_date=request.form.get("ord_date", ''),
                             ctmr_uid=request.args.get("ctmr_uid", ''),
                             ctmr_fname=request.args.get("ctmr_fname", ''),
                             ctmr_lname=request.args.get("ctmr_lname", ''),
@@ -215,14 +216,17 @@ def svc_order_details():
 
     s_action = "/svc_order_details"
     submitMode = request.args.get("submitMode", '')
+    rows=[]
 
     return render_template("svc_order_details.html",
             s_action=s_action,
             submitMode=submitMode,
             ord_id=request.args.get("ord_id", ''),
             ord_number=request.args.get("ord_number", ''),
+            ord_date=request.args.get("ord_date", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),
+            rows=request.args.get("rows", rows),
             )
 
 

@@ -6,21 +6,41 @@
 
 {% block main %}
     <div class="container">
-        <div class="row">
-            <div class="col border me-1 pt-1">
-                <form action="/svc_order_details" method="post">
-                    <div class="input-group mb-1">
-                        <span class="input-group-text" id="basic-addon1">Order ID</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
+        <div class="row mb-2">
+            <div class="col-4 border me-1 pt-1">
+                <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
+                    <div class="container-fluid">
+                        <span class="navbar-text py-0">
+                            Order info
+                        </span>
                     </div>
-                    <div class="input-group mb-1 pt-1">
-                        <span class="input-group-text" id="basic-addon1">Order number</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
-                    </div>
-                </form>
+                </nav>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Order ID</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Order number</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Order status</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order status" aria-describedby="basic-addon1" name="ord_status" value="confirmed">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Order placed date</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order placed" aria-describedby="basic-addon1" name="ord_placed_date" value="{{ ord_date }}">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Order starts date</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_starts_date" value="{{ ord_starts_date }}">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Urgent status (planned/urgent)</span>
+                    <input type="text" class="form-control" readonly placeholder="" aria-label="Urgent status" aria-describedby="basic-addon1" name="ord_urgent_status" value="planned">
+                </div>
             </div>
-            <div class="col border me-1 pt-1">
-                <!-- <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border"></nav> -->
+            <div class="col-4 border me-1 pt-1">
                 <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text py-0">
@@ -45,11 +65,143 @@
                     <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" value="{{ email }}">
                 </div> -->
             </div>
+
+            <div class="col me-1 pt-1"></div>
+
             <div class="col border border-dark pt-1">
                 QR
             </div>
+
         </div>
+
+        <div class="row mb-2">
+            <div class="col me-1 pt-1">
+                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+                    <div class="container-fluid">
+                        <span class="navbar-text">
+                            Order details
+                        </span>
+                    </div>
+                </nav>
+            
+                <table class="table table-hover table-bordered caption-top mb-0">
+                    <thead>
+                        <tr class="border-bottom-2 border-dark">
+                            <th class="text-start" scope="col">Service rendered</th>
+                            <th class="text-start" scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Some useful procedure
+                            </td>
+                            <td class="text-start">
+                                <input class="d-none" name="price" type="text" value="">
+                                15
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>
+            </div>
+
+            <div class="col me-1 pt-1">
+                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+                    <div class="container-fluid">
+                        <span class="navbar-text">
+                            Items recomended for application
+                        </span>
+                    </div>
+                </nav>
+
+                <table class="table table-hover table-bordered caption-top mb-0">
+                    <thead>
+                        <tr class="border-bottom-2 border-dark">
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Some useful product
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Some useful expensive product
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col me-1 pt-1">
+                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+                    <div class="container-fluid">
+                        <span class="navbar-text">
+                            Personal hygiene recomendations
+                        </span>
+                    </div>
+                </nav>
+
+                <table class="table table-hover table-bordered caption-top mb-0">
+                    <thead>
+                        <tr class="border-bottom-2 border-dark">
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Do something regularly until next week.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Don't do anything unexpected to be done until next procedure.
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>
+            </div>
+        </div>  
+
+        <div class="row">
+            <div class="col me-1 pt-1">
+                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+                    <div class="container-fluid">
+                        <span class="navbar-text">
+                            Following procedures recomendations
+                        </span>
+                    </div>
+                </nav>
+
+                <table class="table table-hover table-bordered caption-top mb-0">
+                    <thead>
+                        <tr class="border-bottom-2 border-dark">
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start">
+                                <input class="d-none" name="service" type="text" value="">
+                                Another good procedure
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>
+            </div>
+        </div>  
     </div>
+
 
     <!-- <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
         <div class="container-fluid">
@@ -68,25 +220,25 @@
     </nav> -->
 
     <!-- {% if submitMode == "edit customer info" %} -->
-        <!-- {% if orders %} -->
+        <!-- {% if rows %} -->
             <!-- <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                 <div class="container-fluid">
-                <span class="navbar-text">
-                    Customer orders
-                </span>
+                    <span class="navbar-text">
+                        Order details
+                    </span>
                 </div>
             </nav> -->
-            <!-- <table class="table table-hover table-bordered caption-top mb-0">
-                <thead>
-                    <tr class="border-bottom-2 border-dark">
-                        <th class="text-start" scope="col">ID</th>
+            <!-- <table class="table table-hover table-bordered caption-top mb-0"> -->
+                <!-- <thead> -->
+                    <!-- <tr class="border-bottom-2 border-dark"> -->
+                        <!-- <th class="text-start" scope="col">ID</th>
                         <th class="text-start" scope="col">Number</th>
-                        <th class="text-start" scope="col">Date</th>
-                        <th class="text-center" scope="col">View order</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for row in orders %}
+                        <th class="text-start" scope="col">Service</th> -->
+                        <!-- <th class="text-center" scope="col">View order</th> -->
+                    <!-- </tr> -->
+                <!-- </thead> -->
+                <!-- <tbody> -->
+                <!-- {% for row in orders %}
                     <tr>
                         <form action="/customers_info" method="post">
                             <td class="text-start">
@@ -111,14 +263,14 @@
                             </td>
                         </form>
                     </tr>
-                {% endfor %}
-                </tbody>    
-            </table> -->
+                {% endfor %} -->
+                <!-- </tbody>     -->
+            <!-- </table> -->
         <!-- {% else %} -->
             <!-- <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                 <div class="container-fluid">
                 <span class="navbar-text">
-                    No orders yet
+                    No services rendered
                 </span>
                 </div>
             </nav> -->
