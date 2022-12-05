@@ -4,7 +4,8 @@
 ### Usage
 This app allows users, which are authorized employees of our beauty salon, to login for an account. When 'logged in' users may see the list of existing customers. It is an HTML table with every row representing a separate customer. Logged in users can search for existing customer, view and edit detailed info about each customer or add [the new one customer](). Within customer's info page a user can also view [orders history table](the?), add [a new customer's order](a?), view and edit existing customer's orders details.
 #### customers.html
-This page represents customers table. It is an HTML table. Every row holds data for single customer in the columns: 'ID', 'Unique ID', 'First name', 'Last name', 'Email'. The 'View customer' column holds the button which redirects a user to the ['customer_info' page](#customer_infohtml) which is described [later](#customer_infohtml).
+This page represents customers table. It is an HTML table. Every row holds data for a single customer in the columns: 'ID', 'Unique ID', 'First name', 'Last name', 'Email'. The 'View customer' column holds the button which redirects a user to the ['customer_info' page](#customer_infohtml) which is described [later](#customer_infohtml).
+Atop of customers table search filters provided. If no user found by parameters provided and when nearby 'add new customer' button pressed then nonempty values of search fields will be added [to corresponding](the?) fields for a new customer.
 
 #### customer_info.html
 ............................................................................................................................................................................................................................
