@@ -31,6 +31,27 @@ def stmt_sql_get_customers():
     return stmt
 
 
+def stmt_sql_get_customer_info():
+    """Retrieve detailed customer's info"""
+
+    stmt = """
+    SELECT
+        customers.ctmr_id AS ctmr_id,
+        customers.ctmr_uid AS ctmr_uid,
+        customers.ctmr_first_name AS ctmr_fname,
+        customers.ctmr_last_name AS ctmr_lname,
+        customers.ctmr_email AS ctmr_email,
+        customers.sktype_name AS sktype_name,
+        customers.ctmr_contraindications AS ctmr_contraindications,
+        customers.ctmr_additional_info AS ctmr_additional_info,
+        customers.ctmr_subscribed AS ctmr_subscribed
+    FROM customers
+    WHERE customers.ctmr_id=:ctmr_id
+    """
+
+    return stmt
+
+
 def stmt_sql_ins_customer():
     """Insert new customer"""
 
@@ -47,7 +68,7 @@ def stmt_sql_upd_customer():
 
     stmt = """
     UPDATE customers
-    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email
+    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email, sktype_name=:sktype_name, ctmr_contraindications=:ctmr_contraindications, ctmr_additional_info=:ctmr_additional_info
     WHERE ctmr_id=:ctmr_id
     """
 

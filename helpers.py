@@ -34,6 +34,10 @@ def validate_customer(func):
         ctmr_fname = request.form.get("ctmr_fname", '')
         ctmr_lname = request.form.get("ctmr_lname", '')
         ctmr_email = request.form.get("ctmr_email", '')
+        sktype_name = request.form.get("sktype_name", '')
+        ctmr_contraindications = request.form.get("ctmr_contraindications", '')
+        ctmr_additional_info = request.form.get("ctmr_additional_info", '')
+        ctmr_subscribed = request.form.get("ctmr_subscribed", False)
         check_failed = False
 
         # Ensure fname was submitted
@@ -61,6 +65,12 @@ def validate_customer(func):
         if not ctmr_email:
             check_failed = True
             error_msg = "must provide Email for customer"
+            flash(error_msg)
+        
+        # Ensure skin type was submitted
+        if not sktype_name:
+            check_failed = True
+            error_msg = "must provide Skin type for customer"
             flash(error_msg)
 
         if check_failed:
@@ -107,6 +117,10 @@ def validate_customer(func):
             "ctmr_fname": ctmr_fname,
             "ctmr_lname": ctmr_lname,
             "ctmr_email": ctmr_email,
+            "sktype_name": sktype_name,
+            "ctmr_contraindications": ctmr_contraindications,
+            "ctmr_additional_info": ctmr_additional_info,
+            "ctmr_subscribed": ctmr_subscribed,
         }
 
         if submitMode == "edit customer info":

@@ -26,6 +26,31 @@
             <span class="input-group-text" id="basic-addon1">Email</span>
             <input type="text" class="form-control ctmr_email" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
         </div>
+        <div class="input-group mb-1">
+            <label class="input-group-text" for="skinTypesSelect">Skin type</label>
+            <select class="form-select sktype_name" id="skinTypesSelect" name="sktype_name">
+                {% if sktype_name %}
+                    <option disabled="">Skin type</option>
+                {% else %}
+                    <option disabled="" selected>Skin type</option>
+                {% endif %}
+                {% for sktype in sktypes %}
+                    {% if sktype.name==sktype_name %}
+                        <option selected value="{{ sktype.name }}">{{ sktype.name }}</option>
+                    {% else %}
+                        <option value="{{ sktype.name }}">{{ sktype.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="input-group mb-1">
+            <span class="input-group-text" id="basic-addon1">Contraindications</span>
+            <input type="text" class="form-control ctmr_contraindications" placeholder="Contraindications" aria-label="Contraindications" aria-describedby="basic-addon1" name="ctmr_contraindications" value="{{ ctmr_contraindications }}">
+        </div>
+        <div class="input-group mb-1">
+            <span class="input-group-text" id="basic-addon1">Additional info</span>
+            <input type="text" class="form-control ctmr_additional_info" placeholder="Additional info" aria-label="Additional info" aria-describedby="basic-addon1" name="ctmr_additional_info" value="{{ ctmr_additional_info }}">
+        </div>
         <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
             <div class="container-fluid">
                 <button class="btn btn-outline-success" type="submit" name="submitMode" value="{{ submitMode }}">

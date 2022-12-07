@@ -63,10 +63,6 @@ def customers():
                             url,
                             s_action=s_action,
                             submitMode=request.form.get("submitMode", submitMode),
-                            ctmr_uid=request.form.get("ctmr_uid", ''),
-                            ctmr_fname=request.form.get("ctmr_fname", ''),
-                            ctmr_lname=request.form.get("ctmr_lname", ''),
-                            ctmr_email=request.form.get("ctmr_email", ''),
                             ctmr_id=request.form.get("ctmr_id", ''),
                         )
                     )
@@ -112,7 +108,13 @@ def customer_info():
             ctmr_fname = request.form.get("ctmr_fname", '')
             ctmr_lname = request.form.get("ctmr_lname", '')
             ctmr_email = request.form.get("ctmr_email", '')
+            sktype_name = request.form.get("sktype_name", '')
+            ctmr_contraindications = request.form.get("ctmr_contraindications", '')
+            ctmr_additional_info = request.form.get("ctmr_additional_info", '')
+            ctmr_subscribed = request.form.get("ctmr_subscribed", False)
             if submitMode == "new customer":
+                # generate_UID
+                # ctmr_uid = 
                 try:
                     ctmr_id = create_customer(get_customers=get_customers, kwargs={})
                     submitMode = "edit customer info"
@@ -151,6 +153,10 @@ def customer_info():
                     ctmr_fname=ctmr_fname,
                     ctmr_lname=ctmr_lname,
                     ctmr_email=ctmr_email,
+                    sktype_name=sktype_name,
+                    ctmr_contraindications=ctmr_contraindications,
+                    ctmr_additional_info=ctmr_additional_info,
+                    ctmr_subscribed=ctmr_subscribed,
                     ctmr_id=ctmr_id,
                     orders=customer_orders
                     )
@@ -179,23 +185,33 @@ def customer_info():
     else:
         # request.method == 'GET'
         s_action = request.args.get("s_action", s_action)
-        submitMode = request.args.get("submitMode", '')
+        submitMode = request.args.get("submitMode", 'new customer')
         ctmr_id = request.args.get("ctmr_id", '')
-        ctmr_uid = request.args.get("ctmr_uid", '')
-        ctmr_fname = request.args.get("ctmr_fname", '')
-        ctmr_lname = request.args.get("ctmr_lname", '')
-        ctmr_email = request.args.get("ctmr_email", '')
+        if submitMode == "new customer":
+            customer_orders = []
+            ctmr_fname = ""
+            ctmr_lname = ""
+            ctmr_email = ""
+            sktype_name = ""
+            ctmr_contraindications = ""
+            ctmr_additional_info = ""
+            ctmr_subscribed = False
+            ctmr_id = ""
+            ctmr_uid = ""
+        else:
+            rows = get_customer_info(ctmr_id=ctmr_id)
+            ctmrInfo = rows[0]
+            ctmr_uid = ctmrInfo["ctmr_uid"] if "ctmr_uid" in ctmrInfo else ''
+            ctmr_fname = ctmrInfo["ctmr_fname"] if "ctmr_fname" in ctmrInfo else ''
+            ctmr_lname = ctmrInfo["ctmr_lname"] if "ctmr_lname" in ctmrInfo else ''
+            ctmr_email = ctmrInfo["ctmr_email"] if "ctmr_email" in ctmrInfo else ''
+            sktype_name = ctmrInfo["sktype_name"] if "sktype_name" in ctmrInfo else ''
+            ctmr_contraindications = ctmrInfo["ctmr_contraindications"] if "ctmr_contraindications" in ctmrInfo else ''
+            ctmr_additional_info = ctmrInfo["ctmr_additional_info"] if "ctmr_additional_info" in ctmrInfo else ''
+            ctmr_subscribed = ctmrInfo["ctmr_subscribed"] if "ctmr_subscribed" in ctmrInfo else False
 
     if submitMode == "edit customer info":
         customer_orders = get_customer_orders(ctmr_id=ctmr_id)
-    else:
-        submitMode = "new customer"
-        customer_orders = []
-        ctmr_fname = ""
-        ctmr_lname = ""
-        ctmr_email = ""
-        ctmr_id = ""
-        ctmr_uid = ""
 
     return render_template("customer_info.html",
             s_action=s_action,
@@ -204,8 +220,13 @@ def customer_info():
             ctmr_fname=ctmr_fname,
             ctmr_lname=ctmr_lname,
             ctmr_email=ctmr_email,
+            sktype_name=sktype_name,
+            ctmr_contraindications=ctmr_contraindications,
+            ctmr_additional_info=ctmr_additional_info,
+            ctmr_subscribed=ctmr_subscribed,
             ctmr_id=ctmr_id,
-            orders=request.args.get("orders", customer_orders)
+            orders=request.args.get("orders", customer_orders),
+            sktypes=[{'name':'oily'}, {'name':'dry'}]
             )
 
 
@@ -326,6 +347,15 @@ def update_customer(*, kwargs):
     """"""
     
     stmt = db_requests.stmt_sql_upd_customer()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def get_customer_info(**kwargs):
+    """Retrieve all data by customer id provided"""
+    
+    stmt = db_requests.stmt_sql_get_customer_info()
     rows = db.execute(stmt, **kwargs)
     
     return rows
