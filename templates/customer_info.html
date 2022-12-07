@@ -51,6 +51,15 @@
             <span class="input-group-text" id="basic-addon1">Additional info</span>
             <input type="text" class="form-control ctmr_additional_info" placeholder="Additional info" aria-label="Additional info" aria-describedby="basic-addon1" name="ctmr_additional_info" value="{{ ctmr_additional_info }}">
         </div>
+        <div class="input-group mb-1">
+            {% if ctmr_subscribed=='1' %}
+                <input type="checkbox" class="btn-check" id="subscription" checked autocomplete="off" name="ctmr_subscribed" value="{{ ctmr_subscribed }}">
+                <label class="btn btn-outline-secondary mb-0 disabled" for="subscription">Subscribed</label><br>
+            {% else %}
+                <input type="checkbox" class="btn-check" id="subscription" autocomplete="off" name="ctmr_subscribed" value="{{ ctmr_subscribed }}">
+                <label class="btn btn-outline-secondary mb-0 disabled" for="subscription">Subscribe</label><br>
+            {% endif %}
+        </div>
         <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-0 pb-0">
             <div class="container-fluid">
                 <button class="btn btn-outline-success" type="submit" name="submitMode" value="{{ submitMode }}">

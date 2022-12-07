@@ -26,6 +26,8 @@ def stmt_sql_get_customers():
             OR (customers.ctmr_last_name=:ctmr_lname))
         AND ((:dont_filter_by_email)
             OR (customers.ctmr_email=:ctmr_email))
+        AND ((:dont_filter_by_id)
+            OR (customers.ctmr_id=:ctmr_id))
     """
 
     return stmt
@@ -46,7 +48,16 @@ def stmt_sql_get_customer_info():
         customers.ctmr_additional_info AS ctmr_additional_info,
         customers.ctmr_subscribed AS ctmr_subscribed
     FROM customers
-    WHERE customers.ctmr_id=:ctmr_id
+    WHERE ((:dont_filter_by_uid)
+            OR (customers.ctmr_uid=:ctmr_uid))
+        AND ((:dont_filter_by_fname)
+            OR (customers.ctmr_first_name=:ctmr_fname))
+        AND ((:dont_filter_by_lname)
+            OR (customers.ctmr_last_name=:ctmr_lname))
+        AND ((:dont_filter_by_email)
+            OR (customers.ctmr_email=:ctmr_email))
+        AND ((:dont_filter_by_id)
+            OR (customers.ctmr_id=:ctmr_id))
     """
 
     return stmt
@@ -68,7 +79,7 @@ def stmt_sql_upd_customer():
 
     stmt = """
     UPDATE customers
-    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email, sktype_name=:sktype_name, ctmr_contraindications=:ctmr_contraindications, ctmr_additional_info=:ctmr_additional_info
+    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email, sktype_name=:sktype_name, ctmr_contraindications=:ctmr_contraindications, ctmr_additional_info=:ctmr_additional_info, ctmr_subscribed=:ctmr_subscribed
     WHERE ctmr_id=:ctmr_id
     """
 

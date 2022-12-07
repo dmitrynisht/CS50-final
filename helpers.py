@@ -37,8 +37,10 @@ def validate_customer(func):
         sktype_name = request.form.get("sktype_name", '')
         ctmr_contraindications = request.form.get("ctmr_contraindications", '')
         ctmr_additional_info = request.form.get("ctmr_additional_info", '')
-        ctmr_subscribed = request.form.get("ctmr_subscribed", False)
+        ctmr_subscribed = request.form.get("ctmr_subscribed", '0')
+        ctmr_subscribed = int(ctmr_subscribed)
         check_failed = False
+        error_msg = ""
 
         # Ensure fname was submitted
         if not ctmr_fname:
@@ -82,9 +84,9 @@ def validate_customer(func):
                 row = rows[0]
                 if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_uid"]) == (ctmr_fname, ctmr_lname, ctmr_uid):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_uid"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_uid, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
                         check_failed = True
-
+                        error_msg = "Nothing to change"
                 else:
                     # Email already used
                     check_failed = True
@@ -100,8 +102,9 @@ def validate_customer(func):
                 row = rows[0]
                 if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_email"]) == (ctmr_fname, ctmr_lname, ctmr_email):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_email"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_email, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
                         check_failed = True
+                        error_msg = "Nothing to change"
                 else:
                     # uid already used
                     check_failed = True
@@ -110,7 +113,7 @@ def validate_customer(func):
 
         if check_failed:
             # Implement better Exception handling
-            assert False, "Unverified data!"
+            assert False, error_msg
 
         kwargs = {
             "ctmr_uid": ctmr_uid,
@@ -136,16 +139,18 @@ def filter_customers(func):
     Decorate get_customers() to provide kwargs for request
     """
     @wraps(func)
-    def generate_kwargs(*, submitMode, ctmr_fname='', ctmr_lname='', ctmr_email='', ctmr_uid='', **namedargs):
+    def generate_kwargs(*, submitMode, ctmr_fname='', ctmr_lname='', ctmr_email='', ctmr_uid='', ctmr_id='', **namedargs):
         kwargs = {
             "dont_filter_by_uid": True,
             "dont_filter_by_fname": True,
             "dont_filter_by_lname": True,
             "dont_filter_by_email": True,
+            "dont_filter_by_id": True,
             "ctmr_uid": '',
             "ctmr_fname": '',
             "ctmr_lname": '',
             "ctmr_email": '',
+            "ctmr_id": '',
         }
         
         # Turn On customer filters
@@ -165,6 +170,10 @@ def filter_customers(func):
             if ctmr_email:
                 kwargs["dont_filter_by_email"] = False
                 kwargs["ctmr_email"] = ctmr_email
+            
+            if ctmr_id:
+                kwargs["dont_filter_by_id"] = False
+                kwargs["ctmr_uid"] = ctmr_id
 
         if submitMode in ["new customer", "edit customer info"]:
             if ctmr_email:
@@ -174,6 +183,10 @@ def filter_customers(func):
             if ctmr_uid:
                 kwargs["dont_filter_by_uid"] = False
                 kwargs["ctmr_uid"] = ctmr_uid
+
+            if ctmr_id:
+                kwargs["dont_filter_by_id"] = False
+                kwargs["ctmr_id"] = ctmr_id
 
         return func(kwargs=kwargs)
 

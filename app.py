@@ -111,12 +111,12 @@ def customer_info():
             sktype_name = request.form.get("sktype_name", '')
             ctmr_contraindications = request.form.get("ctmr_contraindications", '')
             ctmr_additional_info = request.form.get("ctmr_additional_info", '')
-            ctmr_subscribed = request.form.get("ctmr_subscribed", False)
+            ctmr_subscribed = request.form.get("ctmr_subscribed", '0')
             if submitMode == "new customer":
                 # generate_UID
                 # ctmr_uid = 
                 try:
-                    ctmr_id = create_customer(get_customers=get_customers, kwargs={})
+                    ctmr_id = create_customer(get_customers=get_customer_info, kwargs={})
                     submitMode = "edit customer info"
                 except AssertionError:
                     error_msg = "Unverified data!"
@@ -133,10 +133,11 @@ def customer_info():
                 # Implement better Exception handling:
                 #   when check_failed Exception occured
                 try:
-                    rows = update_customer(get_customers=get_customers, kwargs={})
+                    rows = update_customer(get_customers=get_customer_info, kwargs={})
                 except AssertionError:
-                    error_msg = "Unverified data!"
-                    flash(error_msg)
+                    # error_msg = "Unverified data!"
+                    # flash(error_msg)
+                    pass
                 except:
                     # Implement better Exception handling:
                     #   when check_failed Exception occured
@@ -199,7 +200,7 @@ def customer_info():
             ctmr_id = ""
             ctmr_uid = ""
         else:
-            rows = get_customer_info(ctmr_id=ctmr_id)
+            rows = get_customer_info(submitMode=submitMode, ctmr_id=ctmr_id)
             ctmrInfo = rows[0]
             ctmr_uid = ctmrInfo["ctmr_uid"] if "ctmr_uid" in ctmrInfo else ''
             ctmr_fname = ctmrInfo["ctmr_fname"] if "ctmr_fname" in ctmrInfo else ''
@@ -208,7 +209,7 @@ def customer_info():
             sktype_name = ctmrInfo["sktype_name"] if "sktype_name" in ctmrInfo else ''
             ctmr_contraindications = ctmrInfo["ctmr_contraindications"] if "ctmr_contraindications" in ctmrInfo else ''
             ctmr_additional_info = ctmrInfo["ctmr_additional_info"] if "ctmr_additional_info" in ctmrInfo else ''
-            ctmr_subscribed = ctmrInfo["ctmr_subscribed"] if "ctmr_subscribed" in ctmrInfo else False
+            ctmr_subscribed = str(ctmrInfo["ctmr_subscribed"]) if "ctmr_subscribed" in ctmrInfo else '0'
 
     if submitMode == "edit customer info":
         customer_orders = get_customer_orders(ctmr_id=ctmr_id)
@@ -332,6 +333,16 @@ def get_customers(*, kwargs):
     return rows
 
 
+@filter_customers
+def get_customer_info(*, kwargs):
+    """Retrieve all data by customer id provided"""
+    
+    stmt = db_requests.stmt_sql_get_customer_info()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
 @validate_customer
 def create_customer(*, kwargs):
     """"""
@@ -347,15 +358,6 @@ def update_customer(*, kwargs):
     """"""
     
     stmt = db_requests.stmt_sql_upd_customer()
-    rows = db.execute(stmt, **kwargs)
-    
-    return rows
-
-
-def get_customer_info(**kwargs):
-    """Retrieve all data by customer id provided"""
-    
-    stmt = db_requests.stmt_sql_get_customer_info()
     rows = db.execute(stmt, **kwargs)
     
     return rows
