@@ -92,66 +92,6 @@ def customers():
         )
 
 
-@app.route("/save_customer_info", methods=["GET", "POST"])
-@login_required
-def save_customer_info():
-    """Save customer info"""
-
-    pass
-
-    stock_data = {
-        'trn_complete': False,
-        # 'ctmr_id':        total,
-    }
-    requestMethod = request.method
-    if requestMethod == "POST":
-        submitMode = request.form.get("submitMode", '')
-    else:
-        submitMode = request.args.get("submitMode", '')
-
-    if submitMode in ["new customer", "edit customer info"]:
-        if submitMode == "new customer":
-            # generate_UID
-            # ctmr_uid = 
-            try:
-                # create_customer() is decorated by validate_customer()
-                # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
-                ctmr_id = create_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
-                submitMode = "edit customer info"
-            except AssertionError:
-                error_msg = "Unverified data!"
-                ctmr_id = ""
-                flash(error_msg)
-            except:
-                error_msg = "Customer already exists"
-                ctmr_id = ""
-                flash(error_msg)
-
-        else:
-            # Implement better Exception handling:
-            #   when check_failed Exception occured
-            try:
-                # update_customer() is decorated by validate_customer()
-                # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
-                rows = update_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
-            except AssertionError:
-                # error_msg = "Unverified data!"
-                # flash(error_msg)
-                pass
-            except:
-                # Implement better Exception handling:
-                #   when check_failed Exception occured
-                error_msg = "SOMETHING WENT WRONG!"
-                flash(error_msg)
-
-        stock_data = {
-            'trn_complete': True,
-            # 'ctmr_id':        total,
-        }
-
-    return stock_data
-
-
 @app.route("/customer_info", methods=["GET", "POST"])
 @login_required
 def customer_info():
@@ -162,86 +102,7 @@ def customer_info():
     if request.method == "POST":
         submitMode = request.form.get("submitMode", '')
 
-        if submitMode in ["new customer", "edit customer info"]:
-            ctmr_id = request.form.get("ctmr_id", '')
-            ctmr_uid = request.form.get("ctmr_uid", '')
-            ctmr_fname = request.form.get("ctmr_fname", '')
-            ctmr_lname = request.form.get("ctmr_lname", '')
-            ctmr_email = request.form.get("ctmr_email", '')
-            sktype_name = request.form.get("sktype_name", '')
-            ctmr_contraindications = request.form.get("ctmr_contraindications", '')
-            ctmr_additional_info = request.form.get("ctmr_additional_info", '')
-            ctmr_subscribed = request.form.get("ctmr_subscribed", '0')
-            if submitMode == "new customer":
-                # generate_UID
-                # ctmr_uid = 
-                try:
-                    ctmr_id = create_customer(get_customers=get_customer_info, kwargs={})
-                    submitMode = "edit customer info"
-                except AssertionError:
-                    error_msg = "Unverified data!"
-                    ctmr_id = ""
-                    flash(error_msg)
-                except:
-                    error_msg = "Customer already exists"
-                    ctmr_id = ""
-                    flash(error_msg)
-
-                customer_orders = []
-
-            else:
-                # Implement better Exception handling:
-                #   when check_failed Exception occured
-                try:
-                    rows = update_customer(get_customers=get_customer_info, kwargs={})
-                except AssertionError:
-                    # error_msg = "Unverified data!"
-                    # flash(error_msg)
-                    pass
-                except:
-                    # Implement better Exception handling:
-                    #   when check_failed Exception occured
-                    error_msg = "SOMETHING WENT WRONG!"
-                    flash(error_msg)
-
-                customer_orders = get_customer_orders(ctmr_id=ctmr_id)
-                # customer_orders = []
-
-            return render_template("customer_info.html",
-                    s_action=s_action,
-                    submitMode=submitMode,
-                    ctmr_uid=ctmr_uid,
-                    ctmr_fname=ctmr_fname,
-                    ctmr_lname=ctmr_lname,
-                    ctmr_email=ctmr_email,
-                    sktype_name=sktype_name,
-                    ctmr_contraindications=ctmr_contraindications,
-                    ctmr_additional_info=ctmr_additional_info,
-                    ctmr_subscribed=ctmr_subscribed,
-                    ctmr_id=ctmr_id,
-                    orders=customer_orders,
-                    sktypes=get_skin_types(),
-                    )
-
-        elif submitMode == "edit order details":
-            url = "svc_order_details"
-            s_action = f"/{url}"
-            return redirect(
-                        url_for(
-                            url,
-                            s_action=s_action,
-                            submitMode=submitMode,
-                            ord_id=request.form.get("ord_id", ''),
-                            ord_number=request.form.get("ord_number", ''),
-                            ord_date=request.form.get("ord_date", ''),
-                            ctmr_uid=request.args.get("ctmr_uid", ''),
-                            ctmr_fname=request.args.get("ctmr_fname", ''),
-                            ctmr_lname=request.args.get("ctmr_lname", ''),
-                            ctmr_email=request.args.get("ctmr_email", ''),
-                            ctmr_id=request.args.get("ctmr_id", ''),
-                        )
-                    )
-        elif submitMode == "new order":
+        if submitMode == "new order":
             pass
     
     else:
@@ -290,6 +151,65 @@ def customer_info():
             orders=request.args.get("orders", customer_orders),
             sktypes=get_skin_types(),
             )
+
+
+@app.route("/save_customer_info", methods=["GET", "POST"])
+@login_required
+def save_customer_info():
+    """Save customer info"""
+
+    trn_data = {
+        'trn_complete': False,
+        # 'ctmr_id':        total,
+    }
+
+    requestMethod = request.method
+    if requestMethod == "POST":
+        submitMode = request.form.get("submitMode", '')
+    else:
+        submitMode = request.args.get("submitMode", '')
+
+    if submitMode in ["new customer", "edit customer info"]:
+        if submitMode == "new customer":
+            # generate_UID
+            # ctmr_uid = 
+            try:
+                # create_customer() is decorated by validate_customer()
+                # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
+                ctmr_id = create_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
+                submitMode = "edit customer info"
+            except AssertionError:
+                error_msg = "Unverified data!"
+                ctmr_id = ""
+                flash(error_msg)
+            except:
+                error_msg = "Customer already exists"
+                ctmr_id = ""
+                flash(error_msg)
+
+        else:
+            # Implement better Exception handling:
+            #   when check_failed Exception occured
+            try:
+                # update_customer() is decorated by validate_customer()
+                # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
+                rows = update_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
+            except AssertionError:
+                # error_msg = "Unverified data!"
+                # flash(error_msg)
+                pass
+            except:
+                # Implement better Exception handling:
+                #   when check_failed Exception occured
+                error_msg = "SOMETHING WENT WRONG!"
+                flash(error_msg)
+
+        trn_data = {
+            'trn_complete': True,
+            # 'ctmr_id':        total,
+        }
+
+    return trn_data
 
 
 @app.route("/svc_order_details", methods=["GET", "POST"])
