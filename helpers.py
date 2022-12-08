@@ -27,17 +27,30 @@ def validate_customer(func):
     Decorate create_customer() to provide data validation before update/create
     """
     @wraps(func)
-    def decorated_function(*args, get_customers, **kwargs):
-        submitMode = request.form.get("submitMode", '')
-        ctmr_id = request.form.get("ctmr_id", '')
-        ctmr_uid = request.form.get("ctmr_uid", '')
-        ctmr_fname = request.form.get("ctmr_fname", '')
-        ctmr_lname = request.form.get("ctmr_lname", '')
-        ctmr_email = request.form.get("ctmr_email", '')
-        sktype_name = request.form.get("sktype_name", '')
-        ctmr_contraindications = request.form.get("ctmr_contraindications", '')
-        ctmr_additional_info = request.form.get("ctmr_additional_info", '')
-        ctmr_subscribed = request.form.get("ctmr_subscribed", '0')
+    def decorated_function(*args, get_customers, requestMethod, **kwargs):
+        if requestMethod == "POST":
+            submitMode = request.form.get("submitMode", '')
+            ctmr_id = request.form.get("ctmr_id", '')
+            ctmr_uid = request.form.get("ctmr_uid", '')
+            ctmr_fname = request.form.get("ctmr_fname", '')
+            ctmr_lname = request.form.get("ctmr_lname", '')
+            ctmr_email = request.form.get("ctmr_email", '')
+            sktype_name = request.form.get("sktype_name", '')
+            ctmr_contraindications = request.form.get("ctmr_contraindications", '')
+            ctmr_additional_info = request.form.get("ctmr_additional_info", '')
+            ctmr_subscribed = request.form.get("ctmr_subscribed", '0')
+        else:
+            submitMode = request.args.get("submitMode", '')
+            ctmr_id = request.args.get("ctmr_id", '')
+            ctmr_uid = request.args.get("ctmr_uid", '')
+            ctmr_fname = request.args.get("ctmr_fname", '')
+            ctmr_lname = request.args.get("ctmr_lname", '')
+            ctmr_email = request.args.get("ctmr_email", '')
+            sktype_name = request.args.get("sktype_name", '')
+            ctmr_contraindications = request.args.get("ctmr_contraindications", '')
+            ctmr_additional_info = request.args.get("ctmr_additional_info", '')
+            ctmr_subscribed = request.args.get("ctmr_subscribed", '0')
+
         ctmr_subscribed = int(ctmr_subscribed)
         check_failed = False
         error_msg = ""
