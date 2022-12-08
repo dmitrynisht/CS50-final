@@ -7,6 +7,20 @@ def stmt_sql_get_user():
     return stmt
 
 
+def stmt_sql_get_skin_types():
+    """Retrieve all skin types"""
+
+    stmt = """
+    SELECT
+        sktypes.sktype_name AS name
+    FROM skin_types AS sktypes
+    ORDER BY
+        sktypes.sktype_id
+    """
+
+    return stmt
+
+
 def stmt_sql_get_customers():
     """Retrieve all customers"""
 

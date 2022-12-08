@@ -159,7 +159,8 @@ def customer_info():
                     ctmr_additional_info=ctmr_additional_info,
                     ctmr_subscribed=ctmr_subscribed,
                     ctmr_id=ctmr_id,
-                    orders=customer_orders
+                    orders=customer_orders,
+                    sktypes=get_skin_types(),
                     )
 
         elif submitMode == "edit order details":
@@ -227,7 +228,7 @@ def customer_info():
             ctmr_subscribed=ctmr_subscribed,
             ctmr_id=ctmr_id,
             orders=request.args.get("orders", customer_orders),
-            sktypes=[{'name':'oily'}, {'name':'dry'}]
+            sktypes=get_skin_types(),
             )
 
 
@@ -314,6 +315,17 @@ def login():
     return render_template("login.html", s_action=s_action)
 
 
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    # session.clear()
+
+    # Redirect user to login form
+    return redirect(url_for("login"))
+
+
 def get_user(*, username):
     """Search for user by username provided"""
 
@@ -371,15 +383,14 @@ def get_customer_orders(**kwargs):
     
     return rows
 
-@app.route("/logout")
-def logout():
-    """Log user out"""
 
-    # Forget any user_id
-    # session.clear()
+def get_skin_types(**kwargs):
+    """Get list of skin types"""
 
-    # Redirect user to login form
-    return redirect(url_for("login"))
+    stmt = db_requests.stmt_sql_get_skin_types()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
 
 
 def errorhandler(e):
