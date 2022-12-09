@@ -1,5 +1,7 @@
 # 'tiny beauty': CRM
-## This is my final project for [Harvard_CS50](https://cs50.harvard.edu/x/2022/)
+#### Video Demo:  <URL HERE>
+#### Description:
+#### This is my final project for [Harvard_CS50](https://cs50.harvard.edu/x/2022/)
 'tiny beauty' is a Flask web application for small beauty salon or beauty parlour. In present state it is kind of CRM-system (Customer Relationship Management). It is designed to keep track of our customers and services beeing provided for our customers.
 ### Usage
 This app allows users, which are authorized employees of our beauty salon, to login for an account. When 'logged in' users may see the list of existing customers. It is an HTML table with every row representing a separate customer. Logged in users can search for existing customer, view and edit detailed info about each customer or add [the new one customer](the?). Within customer's info page a user can also view [orders history table](the?), add [a new customer's order](a?), view and edit existing customer's orders details.
