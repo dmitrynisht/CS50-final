@@ -118,7 +118,7 @@ def customer_info():
             sktype_name = ""
             ctmr_contraindications = ""
             ctmr_additional_info = ""
-            ctmr_subscribed = False
+            ctmr_subscribed = '0'
             ctmr_id = ""
             ctmr_uid = ""
         else:

@@ -81,8 +81,8 @@ def stmt_sql_ins_customer():
     """Insert new customer"""
 
     stmt = """
-    INSERT INTO customers (ctmr_uid, ctmr_first_name, ctmr_last_name, ctmr_email)
-    VALUES (:ctmr_uid, :ctmr_fname, :ctmr_lname, :ctmr_email)
+    INSERT INTO customers (ctmr_uid, ctmr_first_name, ctmr_last_name, ctmr_email, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed)
+    VALUES (:ctmr_uid, :ctmr_fname, :ctmr_lname, :ctmr_email, :sktype_name, :ctmr_contraindications, :ctmr_additional_info, :ctmr_subscribed)
     """
 
     return stmt
