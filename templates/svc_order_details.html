@@ -7,6 +7,7 @@
 {% block main %}
     <div class="container">
         <div class="row mb-2">
+            <!-- Order info -->
             <div class="col-4 border me-1 pt-1">
                 <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
                     <div class="container-fluid">
@@ -32,7 +33,7 @@
                     <input type="text" class="form-control" readonly placeholder="" aria-label="Order placed" aria-describedby="basic-addon1" name="ord_placed_date" value="{{ ord_date }}">
                 </div>
                 <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Order starts date</span>
+                    <span class="input-group-text" id="basic-addon1">Appointment date</span>
                     <input type="text" class="form-control" readonly placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_starts_date" value="{{ ord_starts_date }}">
                 </div>
                 <div class="input-group mb-1 pt-1">
@@ -40,6 +41,7 @@
                     <input type="text" class="form-control" readonly placeholder="" aria-label="Urgent status" aria-describedby="basic-addon1" name="ord_urgent_status" value="planned">
                 </div>
             </div>
+            <!-- Customer info -->
             <div class="col-4 border me-1 pt-1">
                 <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
                     <div class="container-fluid">
@@ -48,10 +50,10 @@
                         </span>
                     </div>
                 </nav>
-                <!-- <div class="input-group mb-1 pt-1">
+                <div class="input-group mb-1 pt-1">
                     <span class="input-group-text" id="basic-addon1">Unique ID</span>
-                    <input type="text" class="form-control" placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="uid" value="{{ uid }}">
-                </div> -->
+                    <input type="text" class="form-control" readonly placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="ctmr_uid" value="{{ ctmr_uid }}">
+                </div>
                 <div class="input-group mb-1 pt-1">
                     <span class="input-group-text" id="basic-addon1">First name</span>
                     <input type="text" class="form-control" readonly placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="ctmr_fname" value="{{ ctmr_fname }}">
@@ -60,10 +62,18 @@
                     <span class="input-group-text" id="basic-addon1">Last name</span>
                     <input type="text" class="form-control" readonly placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="ctmr_lname" value="{{ ctmr_lname }}">
                 </div>
-                <!-- <div class="input-group mb-1 pt-1">
+                <div class="input-group mb-1 pt-1">
                     <span class="input-group-text" id="basic-addon1">Email</span>
-                    <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" value="{{ email }}">
-                </div> -->
+                    <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Contraindications</span>
+                    <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
+                </div>
+                <div class="input-group mb-1 pt-1">
+                    <span class="input-group-text" id="basic-addon1">Precautions</span>
+                    <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
+                </div>
             </div>
 
             <div class="col me-1 pt-1"></div>
@@ -144,7 +154,7 @@
                 <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text">
-                            Personal hygiene recomendations
+                            Aftercare advice
                         </span>
                     </div>
                 </nav>

@@ -101,9 +101,28 @@ def customer_info():
 
     if request.method == "POST":
         submitMode = request.form.get("submitMode", '')
-
-        if submitMode == "new order":
-            pass
+        if submitMode in ["new order", "edit order details"]:
+            url = "svc_order_details"
+            s_action = f"/{url}"
+            
+            order_kwargs = {
+                "ord_id": request.form.get("ord_id", ''),
+                "ord_number": request.form.get("ord_number", ''),
+                "ord_date": request.form.get("ord_date", ''),
+                # following args are not present in form and beeing passed through args
+                "ctmr_uid": request.args.get("ctmr_uid", ''),
+                "ctmr_fname": request.args.get("ctmr_fname", ''),
+                "ctmr_lname": request.args.get("ctmr_lname", ''),
+                "ctmr_email": request.args.get("ctmr_email", ''),
+            }
+            return redirect(
+                        url_for(
+                            url,
+                            s_action=s_action,
+                            submitMode=submitMode,
+                            **order_kwargs
+                        )
+                    )
     
     else:
         # request.method == 'GET'
@@ -219,6 +238,11 @@ def svc_order_details():
 
     s_action = "/svc_order_details"
     submitMode = request.args.get("submitMode", '')
+    if submitMode == "edit order details":
+        # retrieve order details
+        # order_details = get_order_details()
+        # ord_appointmetn_date = order_details["appointment_date"]
+        pass
     rows=[]
 
     return render_template("svc_order_details.html",
@@ -227,8 +251,11 @@ def svc_order_details():
             ord_id=request.args.get("ord_id", ''),
             ord_number=request.args.get("ord_number", ''),
             ord_date=request.args.get("ord_date", ''),
+            ord_appointmetn_date=request.args.get("ord_appointment_date", ''),
+            ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),
+            ctmr_email=request.args.get("ctmr_email", ''),
             rows=request.args.get("rows", rows),
             )
 

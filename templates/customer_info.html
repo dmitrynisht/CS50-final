@@ -84,7 +84,7 @@
                     <th class="text-start" scope="col">ID</th>
                     <th class="text-start" scope="col">Number</th>
                     <th class="text-start" scope="col">Appointment date</th>
-                    <th class="text-start" scope="col">Scin condition</th>
+                    <th class="text-start" scope="col">Skin condition</th>
                     <th class="text-start" scope="col">Beautitian</th>
                     <th class="text-center" scope="col">View order</th>
                 </tr>
@@ -102,10 +102,13 @@
                             {{ row.ord_number }}
                         </td>
                         <td class="text-start">
-                            <input class="d-none" name="ord_date" type="datetime" value="{{ row.ord_date }}">
-                            {{ row.ord_date }}
+                            <input class="d-none" name="ord_appointment_date" type="datetime" value="{{ row.ord_appointment_date }}">
+                            {{ row.ord_appointment_date }}
                         </td>
-                        <td class="text-start"></td>
+                        <td class="text-start">
+                            <input class="d-none" name="ord_status" type="text" value="{{ row.ord_status }}">
+                            {{ row.ord_status }}
+                        </td>
                         <td class="text-start"></td>
                         <td class="text-center">
                             <button type="submit" class="btn btn-outline-secondary btn-sm details" name="submitMode" value="edit order details">
