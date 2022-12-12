@@ -83,7 +83,9 @@
                 <tr class="border-bottom-2 border-dark">
                     <th class="text-start" scope="col">ID</th>
                     <th class="text-start" scope="col">Number</th>
-                    <th class="text-start" scope="col">Date</th>
+                    <th class="text-start" scope="col">Appointment date</th>
+                    <th class="text-start" scope="col">Scin condition</th>
+                    <th class="text-start" scope="col">Beautitian</th>
                     <th class="text-center" scope="col">View order</th>
                 </tr>
             </thead>
@@ -103,6 +105,8 @@
                             <input class="d-none" name="ord_date" type="datetime" value="{{ row.ord_date }}">
                             {{ row.ord_date }}
                         </td>
+                        <td class="text-start"></td>
+                        <td class="text-start"></td>
                         <td class="text-center">
                             <button type="submit" class="btn btn-outline-secondary btn-sm details" name="submitMode" value="edit order details">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -151,6 +155,7 @@
         let btnSave = document.querySelector(`button.saveInfo`);
         btnSave.addEventListener('click', async function()
         {
+            // Updating customer's info
             let ctmr_id = document.querySelector(`input.ctmr_id`).value;
             let ctmr_uid = document.querySelector(`input.ctmr_uid`).value;
             let ctmr_fname = document.querySelector(`input.ctmr_fname`).value;
@@ -188,6 +193,8 @@
         for (let frmOrder of OrdDetailForms) {
             frmOrder.addEventListener('submit', function(event)
             {   
+                // Open selected order details
+
                 // event.preventDefault();
                 // alert("submit happened");
                 let ctmr_id = document.querySelector(`input.ctmr_id`).value;
