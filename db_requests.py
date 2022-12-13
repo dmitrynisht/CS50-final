@@ -107,12 +107,12 @@ def stmt_sql_get_customer_orders():
         orders.svc_ord_id AS ord_id,
         orders.svc_ord_number AS ord_number,
         datetime(orders.svc_ord_appointment_date) AS ord_appointment_date,
+        orders.svc_ord_skin_condition AS ord_skin_condition,
+        orders.usr_login AS ord_beautician,
         orders.svcos_name AS ord_status
     FROM service_orders AS orders
     WHERE (orders.ctmr_id=:ctmr_id)
     """
-    # WHERE ((:dont_filter_by_ctmr_id)
-    #         OR (orders.ctmr_id=:ctmr_id))
     
     return stmt
     
@@ -121,6 +121,18 @@ def stmt_sql_get_customer_order_info():
     """Retrieve detailed customer's order info"""
 
     stmt = """
+    SELECT
+        sv_ord.svc_ord_id AS ord_id,
+        sv_ord.svc_ord_number AS ord_number,
+        datetime(sv_ord.svc_ord_date) AS ord_placed_date,
+        datetime(sv_ord.svc_ord_appointment_date) AS ord_appointment_date,
+        sv_ord.svcos_name AS ord_status,
+        sv_ord.usr_login AS ord_beautician,
+        sv_ord.svc_ord_ctmr_complaints AS ord_ctmr_complaints,
+        sv_ord.svc_ord_skin_condition AS ord_skin_condition
+    FROM service_orders AS sv_ord
+    WHERE (sv_ord.svc_ord_id=:ord_id)
     """
 
     return stmt
+

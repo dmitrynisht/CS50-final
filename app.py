@@ -107,8 +107,8 @@ def customer_info():
             
             order_kwargs = {
                 "ord_id": request.form.get("ord_id", ''),
-                "ord_number": request.form.get("ord_number", ''),
-                "ord_date": request.form.get("ord_date", ''),
+                # "ord_number": request.form.get("ord_number", ''),
+                # "ord_appointment_date": request.form.get("ord_appointment_date", ''),
                 # following args are not present in form and beeing passed through args
                 "ctmr_uid": request.args.get("ctmr_uid", ''),
                 "ctmr_fname": request.args.get("ctmr_fname", ''),
@@ -238,9 +238,10 @@ def svc_order_details():
 
     s_action = "/svc_order_details"
     submitMode = request.args.get("submitMode", '')
+    ord_id=request.args.get("ord_id", '')
     if submitMode == "edit order details":
         # retrieve order details
-        # order_details = get_order_details()
+        order_details = get_service_order_details(ord_id=ord_id)
         # ord_appointmetn_date = order_details["appointment_date"]
         pass
     rows=[]
@@ -251,7 +252,7 @@ def svc_order_details():
             ord_id=request.args.get("ord_id", ''),
             ord_number=request.args.get("ord_number", ''),
             ord_date=request.args.get("ord_date", ''),
-            ord_appointmetn_date=request.args.get("ord_appointment_date", ''),
+            ord_appointment_date=request.args.get("ord_appointment_date", ''),
             ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),
@@ -386,6 +387,15 @@ def get_customer_orders(**kwargs):
     """Search for orders by customer id provided"""
 
     stmt = db_requests.stmt_sql_get_customer_orders()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def get_service_order_details(**kwargs):
+    """Retrieve all data by service order id provided"""
+
+    stmt = db_requests.stmt_sql_get_customer_order_info()
     rows = db.execute(stmt, **kwargs)
     
     return rows
