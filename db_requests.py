@@ -124,7 +124,7 @@ def stmt_sql_get_customer_order_info():
     SELECT
         sv_ord.svc_ord_id AS ord_id,
         sv_ord.svc_ord_number AS ord_number,
-        datetime(sv_ord.svc_ord_date) AS ord_placed_date,
+        datetime(sv_ord.svc_ord_date) AS ord_date,
         datetime(sv_ord.svc_ord_appointment_date) AS ord_appointment_date,
         sv_ord.svcos_name AS ord_status,
         sv_ord.usr_login AS ord_beautician,

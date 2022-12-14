@@ -241,18 +241,27 @@ def svc_order_details():
     ord_id=request.args.get("ord_id", '')
     if submitMode == "edit order details":
         # retrieve order details
-        order_details = get_service_order_details(ord_id=ord_id)
+        rows = get_service_order_details(ord_id=ord_id)
+        order_details = rows[0]
         # ord_appointmetn_date = order_details["appointment_date"]
-        pass
-    rows=[]
+        ord_id = order_details["ord_id"]
+        ord_number = order_details["ord_number"]
+        ord_date = order_details["ord_date"]
+        ord_appointment_date = order_details["ord_appointment_date"]
+        rows=[]
+    else:
+        ord_number=request.args.get("ord_number", '')
+        ord_date=request.args.get("ord_date", '')
+        ord_appointment_date=request.args.get("ord_appointment_date", '')
+        rows=[]
 
     return render_template("svc_order_details.html",
             s_action=s_action,
             submitMode=submitMode,
-            ord_id=request.args.get("ord_id", ''),
-            ord_number=request.args.get("ord_number", ''),
-            ord_date=request.args.get("ord_date", ''),
-            ord_appointment_date=request.args.get("ord_appointment_date", ''),
+            ord_id=ord_id,
+            ord_number=ord_number,
+            ord_date=ord_date,
+            ord_appointment_date=ord_appointment_date,
             ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),
