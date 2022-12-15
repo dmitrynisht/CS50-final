@@ -248,6 +248,7 @@ def svc_order_details():
         ord_number = order_details["ord_number"]
         ord_date = order_details["ord_date"]
         ord_appointment_date = order_details["ord_appointment_date"]
+        ord_beautician = order_details["ord_beautician"]
         rows=[]
     else:
         ord_number=request.args.get("ord_number", '')
@@ -262,6 +263,7 @@ def svc_order_details():
             ord_number=ord_number,
             ord_date=ord_date,
             ord_appointment_date=ord_appointment_date,
+            ord_beautician=ord_beautician,
             ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),

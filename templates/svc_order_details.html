@@ -6,73 +6,81 @@
 
 {% block main %}
     <div class="container">
-        <div class="row mb-2">
+        <div class="row mb-0">
             <!-- Order info -->
-            <div class="col-4 border me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
+            <div class="col-4 border me-2 pt-0 px-0">
+                <nav class="navbar navbar-light bg-light mb-2 py-2 px-0 border-bottom">
                     <div class="container-fluid">
                         <span class="navbar-text py-0">
                             Order info
                         </span>
                     </div>
                 </nav>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Order ID</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Order number</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Order status</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order status" aria-describedby="basic-addon1" name="ord_status" value="confirmed">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Order placed date</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Order placed" aria-describedby="basic-addon1" name="ord_date" value="{{ ord_date }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Appointment date</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Urgent status (planned/urgent)</span>
-                    <input type="text" class="form-control" readonly placeholder="" aria-label="Urgent status" aria-describedby="basic-addon1" name="ord_urgent_status" value="planned">
+                <div class="container mx-0 pb-2 px-2">
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Order ID</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Order number</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Order status</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order status" aria-describedby="basic-addon1" name="ord_status" value="confirmed">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Order placed date</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order placed" aria-describedby="basic-addon1" name="ord_date" value="{{ ord_date }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Appointment date</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
+                    </div>
+                    <div class="input-group mb-0 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Beautician</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Beautician" aria-describedby="basic-addon1" name="ord_beautician" value="{{ ord_beautician }}">
+                    </div>
+                    <!-- <div class="input-group mb-1 pt-1">
+                        <span class="input-group-text" id="basic-addon1">Urgent status (planned/urgent)</span>
+                        <input type="text" class="form-control" readonly placeholder="" aria-label="Urgent status" aria-describedby="basic-addon1" name="ord_urgent_status" value="planned">
+                    </div> -->
                 </div>
             </div>
             <!-- Customer info -->
-            <div class="col-4 border me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mb-1 py-0 px-0 border">
+            <div class="col-4 border me-1 pt-0 px-0">
+                <nav class="navbar navbar-light bg-light mb-2 py-2 px-0 border-bottom">
                     <div class="container-fluid">
                         <span class="navbar-text py-0">
                             Customer info
                         </span>
                     </div>
                 </nav>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Unique ID</span>
-                    <input type="text" class="form-control" readonly placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="ctmr_uid" value="{{ ctmr_uid }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">First name</span>
-                    <input type="text" class="form-control" readonly placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="ctmr_fname" value="{{ ctmr_fname }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Last name</span>
-                    <input type="text" class="form-control" readonly placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="ctmr_lname" value="{{ ctmr_lname }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Email</span>
-                    <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Contraindications</span>
-                    <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
-                </div>
-                <div class="input-group mb-1 pt-1">
-                    <span class="input-group-text" id="basic-addon1">Precautions</span>
-                    <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
+                <div class="container mx-0 pb-2 px-2">
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Unique ID</span>
+                        <input type="text" class="form-control" readonly placeholder="Unique ID" aria-label="Unique ID" aria-describedby="basic-addon1" name="ctmr_uid" value="{{ ctmr_uid }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">First name</span>
+                        <input type="text" class="form-control" readonly placeholder="First name" aria-label="First name" aria-describedby="basic-addon1" name="ctmr_fname" value="{{ ctmr_fname }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Last name</span>
+                        <input type="text" class="form-control" readonly placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="ctmr_lname" value="{{ ctmr_lname }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Email</span>
+                        <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
+                    </div>
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Contraindications</span>
+                        <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
+                    </div>
+                    <div class="input-group mb-0 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Precautions</span>
+                        <!-- <input type="text" class="form-control" readonly placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}"> -->
+                    </div>
                 </div>
             </div>
 
@@ -84,9 +92,9 @@
 
         </div>
 
-        <div class="row mb-2">
-            <div class="col me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+        <div class="row mb-0 pt-3">
+            <div class="col me-0 pt-0 ps-0">
+                <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text">
                             Order details
@@ -116,8 +124,8 @@
                 </table>
             </div>
 
-            <div class="col me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+            <div class="col me-0 pt-0 pe-0">
+                <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text">
                             Items recomended for application
@@ -149,9 +157,9 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+        <div class="row pt-3">
+            <div class="col me-0 pt-0 px-0">
+                <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text">
                             Aftercare advice
@@ -183,9 +191,9 @@
             </div>
         </div>  
 
-        <div class="row">
-            <div class="col me-1 pt-1">
-                <nav class="navbar navbar-light bg-light mt-4 py-0 px-0 border">
+        <div class="row pt-3">
+            <div class="col me-0 pt-0 px-0">
+                <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
                         <span class="navbar-text">
                             Following procedures recomendations
