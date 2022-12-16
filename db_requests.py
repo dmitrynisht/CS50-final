@@ -136,3 +136,19 @@ def stmt_sql_get_customer_order_info():
 
     return stmt
 
+
+def stmt_sql_get_services():
+    """Select services or commodities which are available.
+    Item is available if it's 'unavailability' flag (prod_na) is off, i.e. prod_na=0.
+    prod_na=0 means that item is available."""
+
+    stmt = """
+    SELECT
+        product.prod_name AS prod_name,
+        product.prod_duration AS prod_duration
+    FROM products AS product
+    WHERE prod_na=0
+        AND (product.ptype_name=:ptype)
+    """
+
+    return stmt
