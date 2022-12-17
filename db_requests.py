@@ -21,6 +21,20 @@ def stmt_sql_get_skin_types():
     return stmt
 
 
+def stmt_sql_get_genders():
+    """Retrieve all genders"""
+
+    stmt = """
+    SELECT
+        genders.gd_name AS name
+    FROM genders
+    ORDER BY
+        genders.gd_id
+    """
+
+    return stmt
+
+
 def stmt_sql_get_customers():
     """Retrieve all customers"""
 
@@ -56,6 +70,7 @@ def stmt_sql_get_customer_info():
         customers.ctmr_uid AS ctmr_uid,
         customers.ctmr_first_name AS ctmr_fname,
         customers.ctmr_last_name AS ctmr_lname,
+        customers.gd_name AS ctmr_gender,
         customers.ctmr_email AS ctmr_email,
         customers.sktype_name AS sktype_name,
         customers.ctmr_contraindications AS ctmr_contraindications,
@@ -81,8 +96,8 @@ def stmt_sql_ins_customer():
     """Insert new customer"""
 
     stmt = """
-    INSERT INTO customers (ctmr_uid, ctmr_first_name, ctmr_last_name, ctmr_email, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed)
-    VALUES (:ctmr_uid, :ctmr_fname, :ctmr_lname, :ctmr_email, :sktype_name, :ctmr_contraindications, :ctmr_additional_info, :ctmr_subscribed)
+    INSERT INTO customers (ctmr_uid, ctmr_first_name, ctmr_last_name, ctmr_email, sktype_name, gd_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed)
+    VALUES (:ctmr_uid, :ctmr_fname, :ctmr_lname, :ctmr_email, :sktype_name, :ctmr_gender, :ctmr_contraindications, :ctmr_additional_info, :ctmr_subscribed)
     """
 
     return stmt
@@ -93,7 +108,7 @@ def stmt_sql_upd_customer():
 
     stmt = """
     UPDATE customers
-    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email, sktype_name=:sktype_name, ctmr_contraindications=:ctmr_contraindications, ctmr_additional_info=:ctmr_additional_info, ctmr_subscribed=:ctmr_subscribed
+    SET ctmr_uid=:ctmr_uid, ctmr_first_name=:ctmr_fname, ctmr_last_name=:ctmr_lname, ctmr_email=:ctmr_email, sktype_name=:sktype_name, gd_name=:ctmr_gender, ctmr_contraindications=:ctmr_contraindications, ctmr_additional_info=:ctmr_additional_info, ctmr_subscribed=:ctmr_subscribed
     WHERE ctmr_id=:ctmr_id
     """
 
@@ -145,10 +160,15 @@ def stmt_sql_get_services():
     stmt = """
     SELECT
         product.prod_name AS prod_name,
-        product.prod_duration AS prod_duration
+        product.prod_duration AS prod_duration,
+        prices.price AS price,
+        MAX(prices.prc_date) AS prc_date
     FROM products AS product
+    INNER JOIN product_prices AS prices
+        ON product.prod_name = prices.prod_name
     WHERE prod_na=0
         AND (product.ptype_name=:ptype)
+    GROUP BY product.prod_name
     """
 
     return stmt

@@ -34,6 +34,7 @@ def validate_customer(func):
             ctmr_uid = request.form.get("ctmr_uid", '')
             ctmr_fname = request.form.get("ctmr_fname", '')
             ctmr_lname = request.form.get("ctmr_lname", '')
+            ctmr_gender = request.form.get("ctmr_gender", '')
             ctmr_email = request.form.get("ctmr_email", '')
             sktype_name = request.form.get("sktype_name", '')
             ctmr_contraindications = request.form.get("ctmr_contraindications", '')
@@ -45,6 +46,7 @@ def validate_customer(func):
             ctmr_uid = request.args.get("ctmr_uid", '')
             ctmr_fname = request.args.get("ctmr_fname", '')
             ctmr_lname = request.args.get("ctmr_lname", '')
+            ctmr_gender = request.args.get("ctmr_gender", '')
             ctmr_email = request.args.get("ctmr_email", '')
             sktype_name = request.args.get("sktype_name", '')
             ctmr_contraindications = request.args.get("ctmr_contraindications", '')
@@ -88,6 +90,12 @@ def validate_customer(func):
             error_msg = "must provide Skin type for customer"
             flash(error_msg)
 
+        # Ensure skin type was submitted
+        if not ctmr_gender:
+            check_failed = True
+            error_msg = "must provide Gender for customer"
+            flash(error_msg)
+
         if check_failed:
             pass
         else:
@@ -97,7 +105,7 @@ def validate_customer(func):
                 row = rows[0]
                 if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_uid"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_uid, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_uid"], row["ctmr_gender"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_uid, ctmr_gender, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
                         check_failed = True
                         error_msg = "Nothing to change"
                 else:
@@ -115,7 +123,7 @@ def validate_customer(func):
                 row = rows[0]
                 if str(row["ctmr_id"]) == ctmr_id:
                     # Lets check if there where other changes
-                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_email"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_email, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
+                    if (row["ctmr_fname"], row["ctmr_lname"], row["ctmr_email"], row["ctmr_gender"], row["sktype_name"], row["ctmr_contraindications"], row["ctmr_additional_info"], row["ctmr_subscribed"]) == (ctmr_fname, ctmr_lname, ctmr_email, ctmr_gender, sktype_name, ctmr_contraindications, ctmr_additional_info, ctmr_subscribed):
                         check_failed = True
                         error_msg = "Nothing to change"
                 else:
@@ -133,6 +141,7 @@ def validate_customer(func):
             "ctmr_fname": ctmr_fname,
             "ctmr_lname": ctmr_lname,
             "ctmr_email": ctmr_email,
+            "ctmr_gender": ctmr_gender,
             "sktype_name": sktype_name,
             "ctmr_contraindications": ctmr_contraindications,
             "ctmr_additional_info": ctmr_additional_info,

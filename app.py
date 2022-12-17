@@ -113,6 +113,7 @@ def customer_info():
                 "ctmr_uid": request.args.get("ctmr_uid", ''),
                 "ctmr_fname": request.args.get("ctmr_fname", ''),
                 "ctmr_lname": request.args.get("ctmr_lname", ''),
+                "ctmr_gender": request.args.get("ctmr_gender", ''),
                 "ctmr_email": request.args.get("ctmr_email", ''),
             }
             return redirect(
@@ -134,6 +135,7 @@ def customer_info():
             ctmr_fname = ""
             ctmr_lname = ""
             ctmr_email = ""
+            ctmr_gender = ""
             sktype_name = ""
             ctmr_contraindications = ""
             ctmr_additional_info = ""
@@ -146,6 +148,7 @@ def customer_info():
             ctmr_uid = ctmrInfo["ctmr_uid"] if "ctmr_uid" in ctmrInfo else ''
             ctmr_fname = ctmrInfo["ctmr_fname"] if "ctmr_fname" in ctmrInfo else ''
             ctmr_lname = ctmrInfo["ctmr_lname"] if "ctmr_lname" in ctmrInfo else ''
+            ctmr_gender = ctmrInfo["ctmr_gender"] if "ctmr_gender" in ctmrInfo else ''
             ctmr_email = ctmrInfo["ctmr_email"] if "ctmr_email" in ctmrInfo else ''
             sktype_name = ctmrInfo["sktype_name"] if "sktype_name" in ctmrInfo else ''
             ctmr_contraindications = ctmrInfo["ctmr_contraindications"] if "ctmr_contraindications" in ctmrInfo else ''
@@ -161,6 +164,7 @@ def customer_info():
             ctmr_uid=ctmr_uid,
             ctmr_fname=ctmr_fname,
             ctmr_lname=ctmr_lname,
+            ctmr_gender=ctmr_gender,
             ctmr_email=ctmr_email,
             sktype_name=sktype_name,
             ctmr_contraindications=ctmr_contraindications,
@@ -169,6 +173,7 @@ def customer_info():
             ctmr_id=ctmr_id,
             orders=request.args.get("orders", customer_orders),
             sktypes=get_skin_types(),
+            genders = get_genders(),
             )
 
 
@@ -256,6 +261,9 @@ def svc_order_details():
         ord_appointment_date=request.args.get("ord_appointment_date", '')
         rows=[]
 
+    ptype = "service"
+    treatmentList = get_services(ptype=ptype)
+
     return render_template("svc_order_details.html",
             s_action=s_action,
             submitMode=submitMode,
@@ -267,6 +275,7 @@ def svc_order_details():
             ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),
+            ctmr_gender=request.args.get("ctmr_gender", ''),
             ctmr_email=request.args.get("ctmr_email", ''),
             rows=request.args.get("rows", rows),
             )
@@ -418,6 +427,24 @@ def get_skin_types(**kwargs):
     stmt = db_requests.stmt_sql_get_skin_types()
     rows = db.execute(stmt, **kwargs)
     
+    return rows
+
+
+def get_genders(**kwargs):
+    """Get list of skin types"""
+
+    stmt = db_requests.stmt_sql_get_genders()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def get_services(**kwargs):
+    """"""
+    
+    stmt = db_requests.stmt_sql_get_services()
+    rows = db.execute(stmt, **kwargs)
+
     return rows
 
 

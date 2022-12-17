@@ -22,6 +22,23 @@
         <input type="text" class="form-control ctmr_lname" placeholder="Last name" aria-label="Last name" aria-describedby="basic-addon1" name="ctmr_lname" value="{{ ctmr_lname }}">
     </div>
     <div class="input-group mb-1">
+        <label class="input-group-text" for="ctmrGender">Gender</label>
+        <select class="form-select ctmr_gender" id="ctmrGender" name="ctmr_gender">
+            {% if ctmr_gender %}
+                <option disabled="">gender</option>
+            {% else %}
+                <option disabled="" selected>gender</option>
+            {% endif %}
+            {% for gender in genders %}
+                {% if gender.name==ctmr_gender %}
+                    <option selected value="{{ gender.name }}">{{ gender.name }}</option>
+                {% else %}
+                    <option value="{{ gender.name }}">{{ gender.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="input-group mb-1">
         <span class="input-group-text" id="basic-addon1">Email</span>
         <input type="text" class="form-control ctmr_email" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="ctmr_email" value="{{ ctmr_email }}">
     </div>
@@ -171,6 +188,7 @@
             let ctmr_uid = document.querySelector(`input.ctmr_uid`).value;
             let ctmr_fname = document.querySelector(`input.ctmr_fname`).value;
             let ctmr_lname = document.querySelector(`input.ctmr_lname`).value;
+            let ctmr_gender = document.querySelector(`select.ctmr_gender`).value;
             let ctmr_email = document.querySelector(`input.ctmr_email`).value;
             let sktype_name = document.querySelector(`select.sktype_name`).value;
             let ctmr_contraindications = document.querySelector(`input.ctmr_contraindications`).value;
@@ -182,6 +200,7 @@
             '&ctmr_uid=' + ctmr_uid +
             '&ctmr_fname=' + ctmr_fname +
             '&ctmr_lname=' + ctmr_lname +
+            '&ctmr_gender=' + ctmr_gender +
             '&ctmr_email=' + ctmr_email +
             '&sktype_name=' + sktype_name +
             '&ctmr_contraindications=' + ctmr_contraindications +
@@ -212,8 +231,9 @@
                 let ctmr_uid = document.querySelector(`input.ctmr_uid`).value;
                 let ctmr_fname = document.querySelector(`input.ctmr_fname`).value;
                 let ctmr_lname = document.querySelector(`input.ctmr_lname`).value;
+                let ctmr_gender = document.querySelector(`select.ctmr_gender`).value;
                 let ctmr_email = document.querySelector(`input.ctmr_email`).value;
-                // let sktype_name = document.querySelector(`select.sktype_name`).value;
+                let sktype_name = document.querySelector(`select.sktype_name`).value;
                 // let ctmr_contraindications = document.querySelector(`input.ctmr_contraindications`).value;
                 // let ctmr_additional_info = document.querySelector(`input.ctmr_additional_info`).value;
                 // let ctmr_subscribed = document.querySelector(`button.ctmr_subscribed`).value;
@@ -223,7 +243,9 @@
                 '&ctmr_uid=' + ctmr_uid +
                 '&ctmr_fname=' + ctmr_fname +
                 '&ctmr_lname=' + ctmr_lname +
-                '&ctmr_email=' + ctmr_email;
+                '&ctmr_gender=' + ctmr_gender +
+                '&ctmr_email=' + ctmr_email +
+                '&sktype_name=' + sktype_name;
             });
         }
     </script>
