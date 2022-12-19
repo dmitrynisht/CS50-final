@@ -261,9 +261,6 @@ def svc_order_details():
         ord_appointment_date=request.args.get("ord_appointment_date", '')
         rows=[]
 
-    ptype = "service"
-    treatmentList = get_services(ptype=ptype)
-
     return render_template("svc_order_details.html",
             s_action=s_action,
             submitMode=submitMode,
@@ -279,6 +276,33 @@ def svc_order_details():
             ctmr_email=request.args.get("ctmr_email", ''),
             rows=request.args.get("rows", rows),
             )
+
+
+@app.route("/edit_product_list", methods=["GET", "POST"])
+@login_required
+def edit_product_list():
+    """"""
+
+    trn_data = {
+        'trn_complete': False,
+        # 'ctmr_id':        total,
+    }
+
+    requestMethod = request.method
+    if requestMethod == "POST":
+        submitMode = request.form.get("submitMode", '')
+    else:
+        submitMode = request.args.get("submitMode", '')
+    
+    ptype = "service"
+    productList = get_services(ptype=ptype)
+    
+    trn_data = {
+        'trn_complete': True,
+        'productList': productList,
+    }
+
+    return trn_data
 
 
 @app.route("/login", methods=["GET", "POST"])
