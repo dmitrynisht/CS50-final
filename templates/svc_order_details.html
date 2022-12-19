@@ -314,7 +314,6 @@
             let url = '/edit_product_list' +
             '?submitMode=' + ptype + //btnSave.value
             '&ptype=' + ptype
-            // alert(url)
             try {
                 let response = await fetch(url);
                 var trn_data = await response.json();
@@ -330,18 +329,15 @@
             // and then do the updating in a callback.
             //
             var modalBody = exampleModal.querySelector(`.modal-body`)
-            // alert('3')
             try{
                 var oldProdList = modalBody.querySelector(`.list-group.products`)
                 modalBody.removeChild(oldProdList)
-            } catch { alert('error got') }
-            // alert('4')
-            // var modalProdList = exampleModal.querySelector(`.list-group.products`)
-            // let msgProductList = ""
+            } catch {  }
+
             const modalProdList = document.createElement("div")
             modalProdList.setAttribute("class", "list-group products")
             modalBody.appendChild(modalProdList)
-            // alert('done')
+
             for (let product of trn_data["productList"]){
                 // msgProductList = msgProductList + product["prod_name"]
                 
