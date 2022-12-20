@@ -291,10 +291,12 @@ def edit_product_list():
     requestMethod = request.method
     if requestMethod == "POST":
         submitMode = request.form.get("submitMode", '')
+        ptype = request.form.get("ptype", '')
     else:
         submitMode = request.args.get("submitMode", '')
+        ptype = request.args.get("ptype", '')
     
-    ptype = "service"
+    # ptype = "service"
     productList = get_services(ptype=ptype)
     
     trn_data = {

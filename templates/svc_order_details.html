@@ -161,7 +161,9 @@
                 <!-- Following skin care recomendations table -->
                 <table class="table table-hover table-bordered caption-top mb-0">
                     <thead>
-                        <tr class="border-bottom-2 border-dark">
+                        <tr>
+
+                            <!-- </tr> class="border-bottom-2 border-dark"> -->
                             
                         </tr>
                     </thead>
@@ -255,23 +257,6 @@
             </div>
         </div>  
 
-        <!-- <div class="row pt-3">
-            <div class="list-group">
-                <label class="list-group-item d-flex">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">Second checkbox</button>
-                </label>
-                <label class="list-group-item d-flex">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">Third checkbox</button>
-                </label>
-                <label class="list-group-item d-flex">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">Fourth checkbox</button>
-                </label>
-                <label class="list-group-item d-flex">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="button" autocomplete="off">Fifth checkbox</button>
-                </label>
-            </div>
-        </div> -->
-
     </div>
     
     <!-- Modal (treatment selection) -->
@@ -282,40 +267,32 @@
                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- <div class="modal-body list-group products"> -->
                 <div class="modal-body">
-                    <!-- Creating list here -->
-                    <!-- <label class="list-group-item d-flex">
-                        <button 
-                            type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-toggle="button"
-                            autocomplete="off">
-                            Second checkbox
-                        </button>
-                    </label> -->
+                    <!-- Creating selected list and product list here using js -->
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-outline-secondary">Confirm selection</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-confirm="confirm">Confirm selection</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        var exampleModal = document.getElementById('exampleModal')
+        let exampleModal = document.getElementById('exampleModal')
+        let modalBody = exampleModal.querySelector(`.modal-body`)
         exampleModal.addEventListener('show.bs.modal', async function (event) {
             // Button that triggered the modal
             var button = event.relatedTarget
             // Extract info from data-bs-* attributes
             var ptype = button.getAttribute('data-bs-ptype')
-            let url = '/edit_product_list' +
-            '?submitMode=' + ptype + //btnSave.value
+            
+            var url = '/edit_product_list' +
+            '?submitMode=' + ptype +
             '&ptype=' + ptype
             try {
-                let response = await fetch(url);
+                var response = await fetch(url);
                 var trn_data = await response.json();
             } catch (error) {
                 alert('There was a problem while processing request: error.name=' + error.name + '; error.msg=' + error.msg + ';');
@@ -325,51 +302,120 @@
                 alert("trn_complete: " + trn_data["trn_complete"]  + ". AN ERROR OCCURED WHILE FETCHING DATA");
                 return
             }
+            
             // If necessary, you could initiate an AJAX request here
             // and then do the updating in a callback.
             //
-            var modalBody = exampleModal.querySelector(`.modal-body`)
+            
+            // Update the modal's content.
+            try{
+                var oldSelectedList = modalBody.querySelector(`.selected.products`)
+                modalBody.removeChild(oldSelectedList)
+            } catch {  }
+            
+            try{
+                var oldSeparator = modalBody.querySelector(`.separator`)
+                modalBody.removeChild(oldSeparator)
+            } catch {  }
+
             try{
                 var oldProdList = modalBody.querySelector(`.list-group.products`)
                 modalBody.removeChild(oldProdList)
             } catch {  }
 
-            const modalProdList = document.createElement("div")
+            var modalSelectedHeader = document.createElement("h6")
+            modalSelectedHeader.setAttribute("class", "text-start")
+            modalSelectedHeader.textContent = 'Selected:'
+            var modalSelectedList = document.createElement("div")
+            modalSelectedList.setAttribute("class", "selected products")
+            modalSelectedList.appendChild(modalSelectedHeader)
+            modalBody.appendChild(modalSelectedList)
+            
+            var modalLineSeparator = document.createElement("hr")
+            modalLineSeparator.setAttribute("class", "separator")
+            modalBody.appendChild(modalLineSeparator)
+
+            var modalProdListHeader = document.createElement("h6")
+            modalProdListHeader.setAttribute("class", "text-start")
+            var modalTitle = exampleModal.querySelector('.modal-title')
+            if (ptype == 'service') {
+                modalTitle.textContent = 'Treatment selection'
+                modalProdListHeader.textContent = 'Treatment list:'
+            } else if (ptype == 'commodity') {
+                modalTitle.textContent = 'Product selection'
+                modalProdListHeader.textContent = 'Product list:'
+            } else {
+                modalTitle.textContent = `${ptype} selection`
+                modalProdListHeader.textContent = `${ptype} list:`
+            }
+
+            var modalProdList = document.createElement("div")
             modalProdList.setAttribute("class", "list-group products")
+            modalProdList.appendChild(modalProdListHeader)
             modalBody.appendChild(modalProdList)
 
-            for (let product of trn_data["productList"]){
-                // msgProductList = msgProductList + product["prod_name"]
-                
+            var productList = trn_data["productList"]
+            for (var product of productList){
                 // Something to be inserted
-                
-                const item = document.createElement("label")
-                item.className = "list-group-item d-flex mb-0"
+                var labelItem = document.createElement("label")
+                labelItem.setAttribute("class", "list-group-item d-flex mb-0")
+                labelItem.setAttribute("product", product["prod_name"])
 
-                const itemButton = document.createElement("button")
+                var itemButton = document.createElement("button")
                 itemButton.setAttribute("type", "button")
-                itemButton.setAttribute("class", "btn btn-outline-secondary")
+                itemButton.setAttribute("class", "btn btn-outline-secondary item")
                 itemButton.setAttribute("data-bs-toggle", "button")
                 itemButton.setAttribute("autocomplete", "off")
-
-                const node = document.createTextNode(product["prod_name"])
+                itemButton.setAttribute("product", product["prod_name"])
+                itemButton.addEventListener('click', selectItem, false)
+                var node = document.createTextNode(product["prod_name"])
                 
                 itemButton.appendChild(node)
-                item.appendChild(itemButton)
-                
-                // Inserting here
-                modalProdList.appendChild(item)
-            }
-            // // alert(msgProductList)
-            // // Update the modal's content.
-            var modalTitle = exampleModal.querySelector('.modal-title')
-            // // var modalBodyInput = exampleModal.querySelector('.modal-body input')
-            // // var modalBody = exampleModal.querySelector('.modal-body')
+                labelItem.appendChild(itemButton)
 
-            modalTitle.textContent = 'Modal title: ' + ptype
-            // // modalBodyInput.value = ptype
-            // // modalBody.textContent = 'here will be: ' + ptype
+                // Inserting here
+                modalProdList.appendChild(labelItem)
+            }
         })
+
+        function selectItem(event) {
+            var itemChosen = event.currentTarget
+            var apressed = itemChosen.getAttribute('aria-pressed')
+            var product = itemChosen.getAttribute('product')
+            var modalProdList = modalBody.querySelector(`.list-group.products`)
+            var modalSelectedList = modalBody.querySelector(`.selected.products`)
+            if (apressed == 'true') {
+                var labelItem = modalProdList.querySelector(`[product="${product}"]`)
+                modalProdList.removeChild(labelItem)
+                modalSelectedList.appendChild(labelItem)
+            } else {
+                var labelItem = modalSelectedList.querySelector(`[product="${product}"]`)
+                modalSelectedList.removeChild(labelItem)
+                modalProdList.appendChild(labelItem)
+            }
+        }
+
+        let modalFooter = exampleModal.querySelector(`.modal-footer`)
+        var modalBtnConfirm = modalFooter.querySelector(`[data-bs-confirm="confirm"]`)
+        modalBtnConfirm.addEventListener('click', function () {
+            alert("click confirm done")
+            // // bootstrap method doesn't work correctly
+            // $('#exampleModal').hide()
+            $('#exampleModal').modal('hide')
+        })
+
+        function archievedChecking() {
+            // msgProductList = msgProductList + product["prod_name"]
+            // alert("click 1")
+            // alert(apressed)
+            // alert("apressed=" + apressed + ": (apressed == true) = " + (apressed == true))
+            // alert("apressed=" + apressed + ": (apressed == 'true') = " + (apressed == 'true'))
+            // alert("apressed=" + apressed + ": (apressed == false) = " + (apressed == false))
+            // alert("apressed=" + apressed + ": (apressed == 'false') = " + (apressed == 'false'))
+            // alert("############# apressed = false")
+            // alert(`pressed=${apressed}; prod=${product}`)
+        }
+
     </script>
 
 {% endblock %}
