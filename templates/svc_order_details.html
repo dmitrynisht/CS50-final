@@ -96,6 +96,7 @@
 
         </div>
 
+        <!-- Order details -->
         <div class="row mb-0 pt-3">
             <!-- Order details table -->
             <div class="col me-0 pt-0 ps-0">
@@ -109,7 +110,7 @@
                 </nav>
                 
                 <!-- Order details table -->
-                <table class="table table-hover table-bordered caption-top mb-0">
+                <table class="table table-hover table-bordered caption-top mb-0" name="tOrderDetails">
                     <thead>
                         <tr>
                             <th class="text-start border border-1" scope="col">Service (treatment) rendered</th>
@@ -117,19 +118,19 @@
                             <th class="text-start border border-1" scope="col">Price</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody name="tbdOrderDetails">
                         <tr>
-                            <td class="text-start">
+                            <td class="text-start" name="service" product="Initial assessment" duration="15" price="0">
                                 <input class="d-none" name="service" type="text" value="">
-                                Some useful therapy
+                                Initial assessment
                             </td>
-                            <td class="text-start">
+                            <td class="text-start" name="duration">
                                 <input class="d-none" name="duration" type="text" value="">
                                 15
                             </td>
-                            <td class="text-start">
+                            <td class="text-start" name="price">
                                 <input class="d-none" name="price" type="text" value="">
-                                15
+                                0
                             </td>
                         </tr>
                     </tbody>    
@@ -167,17 +168,11 @@
                             
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody name="tbdHomeSkinCare">
                         <tr>
-                            <td class="text-start">
-                                <input class="d-none" name="service" type="text" value="">
+                            <td class="text-start" name="commodity" product="Some useful product" prod_how_to_use = "how to use">
+                                <input class="d-none" name="commodity" type="text" value="">
                                 Some useful product
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-start">
-                                <input class="d-none" name="service" type="text" value="">
-                                Some useful expensive product
                             </td>
                         </tr>
                     </tbody>    
@@ -195,6 +190,7 @@
             </div>
         </div>
 
+        <!-- Aftercare -->
         <div class="row pt-3">
             <div class="col me-0 pt-0 px-0">
                 <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
@@ -215,7 +211,7 @@
                         <tr>
                             <td class="text-start">
                                 <input class="d-none" name="service" type="text" value="">
-                                Do something regularly until next week.
+                                Do something regularly until next appointment.
                             </td>
                         </tr>
                         <tr>
@@ -229,6 +225,7 @@
             </div>
         </div>  
 
+        <!-- Treatment plan -->
         <div class="row pt-3">
             <div class="col me-0 pt-0 px-0">
                 <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
@@ -286,7 +283,8 @@
             // Button that triggered the modal
             var button = event.relatedTarget
             // Extract info from data-bs-* attributes
-            var ptype = button.getAttribute('data-bs-ptype')
+            let ptype = button.getAttribute('data-bs-ptype')
+            exampleModal.setAttribute("ptype", ptype)
             
             var url = '/edit_product_list' +
             '?submitMode=' + ptype +
@@ -330,7 +328,7 @@
             modalSelectedList.setAttribute("class", "selected products")
             modalSelectedList.appendChild(modalSelectedHeader)
             modalBody.appendChild(modalSelectedList)
-            
+         
             var modalLineSeparator = document.createElement("hr")
             modalLineSeparator.setAttribute("class", "separator")
             modalBody.appendChild(modalLineSeparator)
@@ -341,12 +339,39 @@
             if (ptype == 'service') {
                 modalTitle.textContent = 'Treatment selection'
                 modalProdListHeader.textContent = 'Treatment list:'
+                var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
             } else if (ptype == 'commodity') {
                 modalTitle.textContent = 'Product selection'
                 modalProdListHeader.textContent = 'Product list:'
+                var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
             } else {
                 modalTitle.textContent = `${ptype} selection`
                 modalProdListHeader.textContent = `${ptype} list:`
+                var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
+            }
+            
+            // Inserting already selected items into "selected" area
+            var initiallyModalSelected = new Array()
+            var selectedItems = tbl.querySelectorAll(`tr`)
+            for (row of selectedItems) {
+                col = row.querySelector(`td[name="${ptype}"]`)
+                var product = col.getAttribute("product")
+                initiallyModalSelected.push(product)
+
+                // Something to be inserted
+                // if you will create a function for inserting buttons beaware of source object
+                // Inserting here
+                if (ptype == 'service') {
+                    var duration = col.getAttribute("duration")
+                    var price = col.getAttribute("price")
+                    var prod_how_to_use = ""
+                } else if (ptype == 'commodity') {
+                    var duration = "0"
+                    var price = "0"
+                    var prod_how_to_use = col.getAttribute("prod_how_to_use")
+                }
+                var activity = "active"
+                modalSelectedList.appendChild(createLabelItem(product, activity, ptype, duration, price, prod_how_to_use))
             }
 
             var modalProdList = document.createElement("div")
@@ -355,29 +380,74 @@
             modalBody.appendChild(modalProdList)
 
             var productList = trn_data["productList"]
-            for (var product of productList){
-                // Something to be inserted
-                var labelItem = document.createElement("label")
-                labelItem.setAttribute("class", "list-group-item d-flex mb-0")
-                labelItem.setAttribute("product", product["prod_name"])
+            for (var row of productList){
+                var product = row["prod_name"]
 
-                var itemButton = document.createElement("button")
-                itemButton.setAttribute("type", "button")
-                itemButton.setAttribute("class", "btn btn-outline-secondary item")
-                itemButton.setAttribute("data-bs-toggle", "button")
-                itemButton.setAttribute("autocomplete", "off")
-                itemButton.setAttribute("product", product["prod_name"])
-                itemButton.addEventListener('click', selectItem, false)
-                var node = document.createTextNode(product["prod_name"])
+                var isSelected = initiallyModalSelected.indexOf(product, 0)
+                if (isSelected >= 0) {
+                    continue
+                }
                 
-                itemButton.appendChild(node)
-                labelItem.appendChild(itemButton)
-
+                if (ptype == 'service') {
+                    var duration = row["prod_duration"]
+                    var price = row["price"]
+                    var prod_how_to_use = ""
+                } else if (ptype == 'commodity') {
+                    var duration = "0"
+                    var price = "0"
+                    var prod_how_to_use = row["prod_how_to_use"]
+                }
+                // Something to be inserted
+                // if you will create a function for inserting buttons beaware of source object
                 // Inserting here
-                modalProdList.appendChild(labelItem)
+                var activity = ""
+                modalProdList.appendChild(createLabelItem(product, activity, ptype, duration, price, prod_how_to_use))
             }
         })
 
+        // Creating Label Item for insertion into product list
+        function createLabelItem(product, activity, ptype, duration, price, prod_how_to_use) {
+            // Something to be inserted
+            var labelItem = document.createElement("label")
+            labelItem.setAttribute("class", "list-group-item d-flex mb-0")
+            labelItem.setAttribute("product", product)
+
+            var divItem = document.createElement("div")
+            divItem.setAttribute("class", "d-flex w-100 justify-content-between")
+
+            var itemButton = document.createElement("button")
+            itemButton.setAttribute("type", "button")
+            // if you will create a function for inserting buttons beaware of adding activity as attribute
+            itemButton.setAttribute("class", "btn btn-outline-secondary item " + activity)
+            itemButton.setAttribute("data-bs-toggle", "button")
+            itemButton.setAttribute("autocomplete", "off")
+            itemButton.setAttribute("product", product)
+            itemButton.setAttribute("duration", duration)
+            itemButton.setAttribute("price", price)
+            itemButton.setAttribute("prod_how_to_use", prod_how_to_use)
+            itemButton.addEventListener('click', selectItem, false)
+            itemButton.textContent = product
+            divItem.appendChild(itemButton)
+            // var node = document.createTextNode(product)
+            if (ptype == 'service') {
+                var txtDuration = document.createElement("small")
+                txtDuration.textContent = `${duration} min`
+                divItem.appendChild(txtDuration)
+
+                var txtPrice = document.createElement("small")
+                txtPrice.textContent = `$${price}`
+                divItem.appendChild(txtPrice)
+            } else if (ptype == 'commodity') {
+                var txtDescr = document.createElement("small")
+                txtDescr.textContent = `${prod_how_to_use}`
+                divItem.appendChild(txtDescr)
+            }
+            labelItem.appendChild(divItem)
+
+            return labelItem
+        }
+
+        // Processing item selection for modal window
         function selectItem(event) {
             var itemChosen = event.currentTarget
             var apressed = itemChosen.getAttribute('aria-pressed')
@@ -395,15 +465,95 @@
             }
         }
 
+        // Processing selected items confirmation
         let modalFooter = exampleModal.querySelector(`.modal-footer`)
         var modalBtnConfirm = modalFooter.querySelector(`[data-bs-confirm="confirm"]`)
         modalBtnConfirm.addEventListener('click', function () {
-            alert("click confirm done")
+            // alert("click confirm done")
+            var ptype = exampleModal.getAttribute("ptype")
+            if (ptype == 'service') {
+                var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
+            } else if (ptype == 'commodity') {
+                var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
+            } else {
+                alert("ptype not identified")
+                $('#exampleModal').modal('hide')
+            }
+
+            var oldSelectedItems = tbl.querySelectorAll(`tr`)
+            for (row of oldSelectedItems) {
+                tbl.removeChild(row)
+            }
+            
+            var selectedItems = modalBody.querySelector(`.selected.products`)
+            var rows = selectedItems.querySelectorAll(`button`)
+            for (let row of rows) {
+                // adding tr-s and td-s for each row
+                var product = row.getAttribute("product")
+                var duration = row.getAttribute("duration")
+                var price = row.getAttribute("price")
+                var prod_how_to_use = row.getAttribute("prod_how_to_use")
+                tbl.appendChild(createTableRowItem(product, ptype, duration, price, prod_how_to_use))
+            }
             // // bootstrap method doesn't work correctly
             // $('#exampleModal').hide()
             $('#exampleModal').modal('hide')
         })
 
+        // Creating Table row item for insertion into table
+        function createTableRowItem(product, ptype, duration, price, prod_how_to_use) {
+            var tr = document.createElement("tr")
+            
+            var input = document.createElement("input")
+            input.setAttribute("class", "d-none")
+            input.setAttribute("name", ptype)
+            input.setAttribute("type", "text")
+            input.setAttribute("value", "")
+            var td = document.createElement("td")
+            td.setAttribute("class", "text-start")
+            td.setAttribute("name", ptype)
+            td.setAttribute("product", product)
+            td.setAttribute("duration", duration)
+            td.setAttribute("price", price)
+            td.setAttribute("prod_how_to_use", prod_how_to_use)
+            td.appendChild(input)
+            td.textContent = product
+            tr.appendChild(td)
+
+            if (ptype == 'service') {
+                var input = document.createElement("input")
+                input.setAttribute("class", "d-none")
+                input.setAttribute("name", "duration")
+                input.setAttribute("type", "text")
+                input.setAttribute("value", "")
+                var td = document.createElement("td")
+                td.setAttribute("class", "text-start")
+                td.setAttribute("name", "duration")
+                td.appendChild(input)
+                td.textContent = duration
+                tr.appendChild(td)
+                
+                var input = document.createElement("input")
+                input.setAttribute("class", "d-none")
+                input.setAttribute("name", "price")
+                input.setAttribute("type", "text")
+                input.setAttribute("value", "")
+                var td = document.createElement("td")
+                td.setAttribute("class", "text-start")
+                td.setAttribute("name", "price")
+                td.appendChild(input)
+                td.textContent = price
+                tr.appendChild(td)
+            }
+
+            if (ptype == 'commodity') {
+
+            }
+
+            return tr
+        }
+
+        // Collection of alerts
         function archievedChecking() {
             // msgProductList = msgProductList + product["prod_name"]
             // alert("click 1")

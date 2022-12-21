@@ -161,6 +161,9 @@ def stmt_sql_get_services():
     SELECT
         product.prod_name AS prod_name,
         product.prod_duration AS prod_duration,
+        product.prod_details AS prod_details,
+        product.prod_how_to_use AS prod_how_to_use,
+        product.prod_img_path AS prod_img_path,
         prices.price AS price,
         MAX(prices.prc_date) AS prc_date
     FROM products AS product
