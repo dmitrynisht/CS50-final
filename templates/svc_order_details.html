@@ -23,23 +23,59 @@
                     </div>
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Order number</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
+                        <input type="text" class="form-control" placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
                     </div>
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Order status</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order status" aria-describedby="basic-addon1" name="ord_status" value="confirmed">
+                        <input type="text" class="form-control" placeholder="" aria-label="Order status" aria-describedby="basic-addon1" name="ord_status" value="confirmed">
                     </div>
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Order placed date</span>
                         <input type="text" class="form-control" readonly placeholder="" aria-label="Order placed" aria-describedby="basic-addon1" name="ord_date" value="{{ ord_date }}">
                     </div>
-                    <div class="input-group mb-1 pt-0">
+                    <!-- <div class="input-group mb-1 pt-0"> -->
+                        <!-- <span class="input-group-text" id="basic-addon1">Appointment date</span> -->
+                        <!-- <input type="text" class="form-control" placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}"> -->
+                    <!-- </div> -->
+                    <!-- <div id="datepicker" class="input-group date mb-1 pt-0"> -->
+                        <!-- <input type="text" class="form-control"> -->
+                        <!-- <span class="input-group-append"> -->
+                            <!-- <span class="input-group-text"> -->
+                                <!-- <i class="fa fa-calendar"></i> -->
+                            <!-- </span> -->
+                        <!-- </span> -->
+                    <!-- </div> -->
+                    <div id="datepicker" class="input-group mb-1 pt-0 date">
                         <span class="input-group-text" id="basic-addon1">Appointment date</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
+                        <input type="text" class="form-control" placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
+                        <span class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </span>
+                    </div>
+                    <!-- <div class="input-group mb-1 pt-0">
+                        <input data-provide="datepicker" value="{{ ord_appointment_date }}">
+                    </div> -->
+                    <!-- <div class="input-group date bootstrap-timepicker timepicker" data-provide="datepicker">
+                        <input type="text" class="form-control">
+                        <div class="input-group bootstrap-timepicker timepicker">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                            <i class="glyphicon glyphicon-th">
+                        </div>
+                    </div> -->
+                    <!-- <div class="input-group bootstrap-timepicker timepicker">
+                        <input id="timepicker" type="text" class="form-control input-small">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                    </div> -->
+
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Beautician</span>
+                        <input type="text" class="form-control" placeholder="" aria-label="Beautician" aria-describedby="basic-addon1" name="ord_beautician" value="{{ ord_beautician }}">
                     </div>
                     <div class="input-group mb-0 pt-0">
-                        <span class="input-group-text" id="basic-addon1">Beautician</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Beautician" aria-describedby="basic-addon1" name="ord_beautician" value="{{ ord_beautician }}">
+                        <span class="input-group-text" id="basic-addon1">Description</span>
+                        <input type="text" class="form-control" placeholder="" aria-label="Description" aria-describedby="basic-addon1" name="ord_description" value="{{ ord_description }}">
                     </div>
                     <!-- <div class="input-group mb-1 pt-1">
                         <span class="input-group-text" id="basic-addon1">Urgent status (planned/urgent)</span>
@@ -277,6 +313,18 @@
     </div>
 
     <script>
+        $('#datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true
+        });
+        // $(function() {
+        //     $('#datepicker').datepicker({
+        //         format: "dd/mm/yyyy",
+        //         autoclose: true
+        //     });
+        // });
+
+        alert("passed")
         let exampleModal = document.getElementById('exampleModal')
         let modalBody = exampleModal.querySelector(`.modal-body`)
         exampleModal.addEventListener('show.bs.modal', async function (event) {
@@ -361,17 +409,22 @@
                 // Something to be inserted
                 // if you will create a function for inserting buttons beaware of source object
                 // Inserting here
-                if (ptype == 'service') {
-                    var duration = col.getAttribute("duration")
-                    var price = col.getAttribute("price")
-                    var prod_how_to_use = ""
-                } else if (ptype == 'commodity') {
-                    var duration = "0"
-                    var price = "0"
-                    var prod_how_to_use = col.getAttribute("prod_how_to_use")
+                var kwAttrs = {
+                    activity: "active",
                 }
-                var activity = "active"
-                modalSelectedList.appendChild(createLabelItem(product, activity, ptype, duration, price, prod_how_to_use))
+                if (ptype == 'service') {
+                    kwAttrs["duration"] = col.getAttribute("duration")
+                    kwAttrs["price"] = col.getAttribute("price")
+                    kwAttrs["prod_how_to_use"] = ""
+                    kwAttrs["imgPath"] = ""
+                } else if (ptype == 'commodity') {
+                    kwAttrs["duration"] = "0"
+                    kwAttrs["price"] = "0"
+                    kwAttrs["prod_how_to_use"] = ""
+                    // kwAttrs["prod_how_to_use"] = col.getAttribute("prod_how_to_use")
+                    kwAttrs["imgPath"] = ""
+                }
+                modalSelectedList.appendChild(createLabelItem(product, ptype, kwAttrs))
             }
 
             var modalProdList = document.createElement("div")
@@ -379,6 +432,7 @@
             modalProdList.appendChild(modalProdListHeader)
             modalBody.appendChild(modalProdList)
 
+            // Inserting All product items into "Product list" area
             var productList = trn_data["productList"]
             for (var row of productList){
                 var product = row["prod_name"]
@@ -388,58 +442,75 @@
                     continue
                 }
                 
+                var kwAttrs = {
+                    activity: "",
+                }
                 if (ptype == 'service') {
-                    var duration = row["prod_duration"]
-                    var price = row["price"]
-                    var prod_how_to_use = ""
+                    kwAttrs["duration"] = row["prod_duration"]
+                    kwAttrs["price"] = row["price"]
+                    kwAttrs["prod_how_to_use"] = ""
+                    kwAttrs["imgPath"] = ""
                 } else if (ptype == 'commodity') {
-                    var duration = "0"
-                    var price = "0"
-                    var prod_how_to_use = row["prod_how_to_use"]
+                    kwAttrs["duration"] = "0"
+                    kwAttrs["price"] = "0"
+                    kwAttrs["prod_how_to_use"] = ""
+                    // kwAttrs["prod_how_to_use"] = row["prod_how_to_use"]
+                    kwAttrs["imgPath"] = row["prod_img_path"]
                 }
                 // Something to be inserted
                 // if you will create a function for inserting buttons beaware of source object
                 // Inserting here
-                var activity = ""
-                modalProdList.appendChild(createLabelItem(product, activity, ptype, duration, price, prod_how_to_use))
+                modalProdList.appendChild(createLabelItem(product, ptype, kwAttrs))
             }
         })
 
         // Creating Label Item for insertion into product list
-        function createLabelItem(product, activity, ptype, duration, price, prod_how_to_use) {
+        function createLabelItem(product, ptype, kwAttrs) {
             // Something to be inserted
             var labelItem = document.createElement("label")
             labelItem.setAttribute("class", "list-group-item d-flex mb-0")
             labelItem.setAttribute("product", product)
 
             var divItem = document.createElement("div")
-            divItem.setAttribute("class", "d-flex w-100 justify-content-between")
+            divItem.setAttribute("class", "d-flex w-100 justify-content-between prodItem")
+            // divItem.setAttribute("style", "height: 50px;")
 
+            if (ptype == 'commodity') {
+                divItem.setAttribute("class", "d-flex w-100 prodItem")
+                var imgItem = document.createElement("img")
+                imgItem.setAttribute("src", kwAttrs["imgPath"])
+                imgItem.setAttribute("class", "img-fluid me-3")
+                imgItem.setAttribute("alt", "no image")
+                // imgItem.setAttribute("style", "width: 50px;")
+                
+                divItem.appendChild(imgItem)
+            }
+            
             var itemButton = document.createElement("button")
             itemButton.setAttribute("type", "button")
             // if you will create a function for inserting buttons beaware of adding activity as attribute
-            itemButton.setAttribute("class", "btn btn-outline-secondary item " + activity)
+            itemButton.setAttribute("class", "btn btn-outline-secondary item " + kwAttrs["activity"])
             itemButton.setAttribute("data-bs-toggle", "button")
             itemButton.setAttribute("autocomplete", "off")
             itemButton.setAttribute("product", product)
-            itemButton.setAttribute("duration", duration)
-            itemButton.setAttribute("price", price)
-            itemButton.setAttribute("prod_how_to_use", prod_how_to_use)
+            itemButton.setAttribute("duration", kwAttrs["duration"])
+            itemButton.setAttribute("price", kwAttrs["price"])
+            itemButton.setAttribute("prod_how_to_use", kwAttrs["prod_how_to_use"])
             itemButton.addEventListener('click', selectItem, false)
             itemButton.textContent = product
             divItem.appendChild(itemButton)
-            // var node = document.createTextNode(product)
+
             if (ptype == 'service') {
                 var txtDuration = document.createElement("small")
-                txtDuration.textContent = `${duration} min`
+                txtDuration.textContent = `${kwAttrs["duration"]} min`
                 divItem.appendChild(txtDuration)
 
                 var txtPrice = document.createElement("small")
-                txtPrice.textContent = `$${price}`
+                txtPrice.textContent = `$${kwAttrs["price"]}`
                 divItem.appendChild(txtPrice)
             } else if (ptype == 'commodity') {
                 var txtDescr = document.createElement("small")
-                txtDescr.textContent = `${prod_how_to_use}`
+                txtDescr.textContent = `${kwAttrs["prod_how_to_use"]}`
                 divItem.appendChild(txtDescr)
             }
             labelItem.appendChild(divItem)

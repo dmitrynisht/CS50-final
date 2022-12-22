@@ -55,3 +55,14 @@ main img
 
 .border-bottom-2 { border-bottom: 2px solid black; }
 .border-top-2 { border-top: 2px solid black; }
+
+/*  */
+div.prodItem
+{
+    height: 50px;
+}
+
+div.prodItem img
+{
+    width: 50px;
+}

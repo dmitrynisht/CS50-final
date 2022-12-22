@@ -144,7 +144,8 @@ def stmt_sql_get_customer_order_info():
         sv_ord.svcos_name AS ord_status,
         sv_ord.usr_login AS ord_beautician,
         sv_ord.svc_ord_ctmr_complaints AS ord_ctmr_complaints,
-        sv_ord.svc_ord_skin_condition AS ord_skin_condition
+        sv_ord.svc_ord_skin_condition AS ord_skin_condition,
+        sv_ord.svc_ord_description AS ord_description
     FROM service_orders AS sv_ord
     WHERE (sv_ord.svc_ord_id=:ord_id)
     """
