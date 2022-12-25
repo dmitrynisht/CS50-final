@@ -35,20 +35,31 @@
                     </div>
 
                     <!-- THIS IS DATEPICKER + -->
-                    <div id="datepicker" class="input-group mb-1 pt-0 date">
-                        <span class="input-group-text" id="basic-addon1">Appointment date</span>
-                        <input id="pickerSource" type="text" class="form-control" placeholder="" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
-                        <span class="input-group-append">
-                            <span class="input-group-text">
+                    <!-- <div id="datepicker" class="input-group mb-1 pt-0 date" data-target-input="nearest"> -->
+                        <!-- <span class="input-group-text" id="basic-addon1">Appointment date</span> -->
+                        <!-- <input id="pickerSource" type="text" class="form-control datepicker-input" placeholder="" data-target="#datepicker" aria-label="Procedure starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}"> -->
+                        <!-- <div class="input-group-append" data-target="#datepicker"> -->
+                            <!-- <span class="input-group-text"> -->
                                 <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
                                     <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
                                     <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                 </svg> -->
+                                <!-- <i class="bi bi-calendar3"></i> -->
+                            <!-- </span> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- THIS IS DATEPICKER - -->
+                    <!-- ANY DATETIMEPICKER + -->
+                    <div class="input-group mb-1 pt-0">
+                        <span class="input-group-text" id="basic-addon1">Appointment date</span>
+                        <input id="pickerSource" type="text" class="form-control input flflpicker" placeholder="" aria-label="Treatment starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
                                 <i class="bi bi-calendar3"></i>
                             </span>
-                        </span>
+                        </div>
                     </div>
-                    <!-- THIS IS DATEPICKER - -->
+                    <!-- ANY - -->
 
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Beautician</span>
@@ -297,16 +308,25 @@
         // #####################################
         // #### UPDATE FOR DATETIME PICKING ####
         // #####################################
-        let appointment = document.getElementById('pickerSource').value
-        let appDate = appointment.split(' ')[0]
-        let appTime = appointment.split(' ')[1]
-        $('#datepicker').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true,
-            clearBtn: true,
-        });
-        $( "#datepicker" ).datepicker( "setDate", appDate )
         // alert('alert')
+        let appointment = document.getElementById('pickerSource').value
+        // let appDate = appointment.split(' ')[0]
+        // let appTime = appointment.split(' ')[1]
+        // alert('alert')
+
+        configflpkr = {
+            enableTime: true,
+            altInput: true,
+            altFormat: "Y-m-d H:i",
+            dateFormat: "Y-m-d H:i",
+            defaultDate: appointment,
+            // altFormat: "F j, Y H:i",
+            // dateFormat: "Y-m-d",
+            
+        }
+
+        $('.flflpicker').flatpickr(configflpkr)
+
         // alert("passed")
 
         let exampleModal = document.getElementById('exampleModal')
