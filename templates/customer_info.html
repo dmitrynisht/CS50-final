@@ -210,6 +210,7 @@
             '&ctmr_contraindications=' + ctmr_contraindications +
             '&ctmr_additional_info=' + ctmr_additional_info +
             '&ctmr_subscribed=' + ctmr_subscribed;
+            alert(url);
             try {
                 let response = await fetch(url);
                 var trn_data = await response.json();
@@ -238,8 +239,8 @@
                 let ctmr_gender = document.querySelector(`select.ctmr_gender`).value;
                 let ctmr_email = document.querySelector(`input.ctmr_email`).value;
                 let sktype_name = document.querySelector(`select.sktype_name`).value;
-                // let ctmr_contraindications = document.querySelector(`input.ctmr_contraindications`).value;
-                // let ctmr_additional_info = document.querySelector(`input.ctmr_additional_info`).value;
+                let ctmr_contraindications = document.querySelector(`input.ctmr_contraindications`).value;
+                let ctmr_additional_info = document.querySelector(`input.ctmr_additional_info`).value;
                 // let ctmr_subscribed = document.querySelector(`button.ctmr_subscribed`).value;
 
                 frmOrder.action = frmOrder.action +
@@ -249,7 +250,9 @@
                 '&ctmr_lname=' + ctmr_lname +
                 '&ctmr_gender=' + ctmr_gender +
                 '&ctmr_email=' + ctmr_email +
-                '&sktype_name=' + sktype_name;
+                '&sktype_name=' + sktype_name +
+                '&ctmr_contraindications=' + ctmr_contraindications +
+                '&ctmr_additional_info=' + ctmr_additional_info;
             });
         }
     </script>
