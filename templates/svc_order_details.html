@@ -360,7 +360,7 @@
             
             // Update the modal's content.
             try{
-                var oldSelectedList = modalBody.querySelector(`.selected.products`)
+                var oldSelectedList = modalBody.querySelector(`.selectedProducts`)
                 modalBody.removeChild(oldSelectedList)
             } catch {  }
             
@@ -378,7 +378,7 @@
             modalSelectedHeader.setAttribute("class", "text-start")
             modalSelectedHeader.textContent = 'Selected:'
             var modalSelectedList = document.createElement("div")
-            modalSelectedList.setAttribute("class", "selected products")
+            modalSelectedList.setAttribute("class", "list-group selectedProducts")
             modalSelectedList.appendChild(modalSelectedHeader)
             modalBody.appendChild(modalSelectedList)
          
@@ -529,7 +529,7 @@
             var apressed = itemChosen.getAttribute('aria-pressed')
             var product = itemChosen.getAttribute('product')
             var modalProdList = modalBody.querySelector(`.list-group.products`)
-            var modalSelectedList = modalBody.querySelector(`.selected.products`)
+            var modalSelectedList = modalBody.querySelector(`.selectedProducts`)
             if (apressed == 'true') {
                 var labelItem = modalProdList.querySelector(`[product="${product}"]`)
                 modalProdList.removeChild(labelItem)
@@ -561,7 +561,7 @@
                 tbl.removeChild(row)
             }
             
-            var selectedItems = modalBody.querySelector(`.selected.products`)
+            var selectedItems = modalBody.querySelector(`.selectedProducts`)
             var rows = selectedItems.querySelectorAll(`button`)
             for (let row of rows) {
                 // adding tr-s and td-s for each row
