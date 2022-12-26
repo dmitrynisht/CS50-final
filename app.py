@@ -115,6 +115,8 @@ def customer_info():
                 "ctmr_lname": request.args.get("ctmr_lname", ''),
                 "ctmr_gender": request.args.get("ctmr_gender", ''),
                 "ctmr_email": request.args.get("ctmr_email", ''),
+                "ctmr_contraindications": request.args.get("ctmr_contraindications", ''),
+                "ctmr_additional_info": request.args.get("ctmr_additional_info", ''),
             }
             return redirect(
                         url_for(
@@ -255,12 +257,14 @@ def svc_order_details():
         ord_appointment_date = order_details["ord_appointment_date"]
         ord_beautician = order_details["ord_beautician"]
         ord_description = order_details["ord_description"]
-        rows=[]
+        ord_ctmr_complaints = order_details["ord_ctmr_complaints"]
+        ord_skin_condition = order_details["ord_skin_condition"]
+        rows = []
     else:
         ord_number=request.args.get("ord_number", '')
         ord_date=request.args.get("ord_date", '')
         ord_appointment_date=request.args.get("ord_appointment_date", '')
-        rows=[]
+        rows = []
 
     return render_template("svc_order_details.html",
             s_action=s_action,
@@ -272,6 +276,8 @@ def svc_order_details():
             ord_appointment_date=ord_appointment_date,
             ord_beautician=ord_beautician,
             ord_description=ord_description,
+            ord_ctmr_complaints=ord_ctmr_complaints,
+            ord_skin_condition=ord_skin_condition,
             ctmr_uid=request.args.get("ctmr_uid", ''),
             ctmr_fname=request.args.get("ctmr_fname", ''),
             ctmr_lname=request.args.get("ctmr_lname", ''),

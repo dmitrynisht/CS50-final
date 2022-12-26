@@ -87,7 +87,7 @@
                 </div>
             </div>
             <!-- Customer info -->
-            <div class="col-4 border me-1 pt-0 px-0">
+            <div class="col-4 border me-2 pt-0 px-0">
                 <nav class="navbar navbar-light bg-light mb-2 py-2 px-0 border-bottom">
                     <div class="container-fluid">
                         <span class="navbar-text py-0">
@@ -127,18 +127,32 @@
                 </div>
             </div>
 
-            <div class="col me-1 pt-1"></div>
+            <div class="col me-2 pt-0 px-0"></div>
 
-            <div class="col border border-dark pt-1">
+            <div class="col border pt-0 px-0">
                 QR
             </div>
 
         </div>
 
+        <!-- Customer important info -->
+        <div class="row mb-0 pt-2">
+            <div class="col me-0 pt-0 px-0">
+                <div class="input-group mb-2 pt-0">
+                    <span class="input-group-text" id="basic-addon1">Complaints</span>
+                    <input type="text" class="form-control" placeholder="Complaints" aria-label="Complaints" aria-describedby="basic-addon1" name="ord_ctmr_complaints" value="{{ ord_ctmr_complaints }}">
+                </div>
+                <div class="input-group mb-0 pt-0">
+                    <span class="input-group-text" id="basic-addon1">Skin condition</span>
+                    <input type="text" class="form-control" placeholder="Skin condition" aria-label="Skin condition" aria-describedby="basic-addon1" name="ord_skin_condition" value="{{ ord_skin_condition }}">
+                </div>
+            </div>
+        </div>
+
         <!-- Order details -->
         <div class="row mb-0 pt-3">
             <!-- Order details table -->
-            <div class="col me-0 pt-0 ps-0">
+            <div class="col me-0 pt-0 px-0">
                 <!-- Order details table header -->
                 <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
@@ -230,7 +244,7 @@
         </div>
 
         <!-- Aftercare -->
-        <div class="row pt-3 d-none">
+        <div class="row mb-0 pt-3 d-none">
             <div class="col me-0 pt-0 px-0">
                 <nav class="navbar navbar-light bg-light mt-0 py-0 px-0 border">
                     <div class="container-fluid">
