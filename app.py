@@ -277,6 +277,8 @@ def svc_order_details():
             ctmr_lname=request.args.get("ctmr_lname", ''),
             ctmr_gender=request.args.get("ctmr_gender", ''),
             ctmr_email=request.args.get("ctmr_email", ''),
+            ctmr_contraindications=request.args.get("ctmr_contraindications", ''),
+            ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
             rows=request.args.get("rows", rows),
             ordStatusList=get_statusList(),
             )
