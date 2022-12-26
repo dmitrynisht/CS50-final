@@ -173,7 +173,7 @@ def customer_info():
             ctmr_id=ctmr_id,
             orders=request.args.get("orders", customer_orders),
             sktypes=get_skin_types(),
-            genders = get_genders(),
+            genders=get_genders(),
             )
 
 
@@ -250,6 +250,7 @@ def svc_order_details():
         order_details = rows[0]
         ord_id = order_details["ord_id"]
         ord_number = order_details["ord_number"]
+        ord_status = order_details["ord_status"]
         ord_date = order_details["ord_date"]
         ord_appointment_date = order_details["ord_appointment_date"]
         ord_beautician = order_details["ord_beautician"]
@@ -266,6 +267,7 @@ def svc_order_details():
             submitMode=submitMode,
             ord_id=ord_id,
             ord_number=ord_number,
+            ord_status=ord_status,
             ord_date=ord_date,
             ord_appointment_date=ord_appointment_date,
             ord_beautician=ord_beautician,
@@ -276,6 +278,7 @@ def svc_order_details():
             ctmr_gender=request.args.get("ctmr_gender", ''),
             ctmr_email=request.args.get("ctmr_email", ''),
             rows=request.args.get("rows", rows),
+            ordStatusList=get_statusList(),
             )
 
 
@@ -467,9 +470,18 @@ def get_genders(**kwargs):
 
 
 def get_services(**kwargs):
-    """"""
+    """Get products filtered by product_type"""
     
     stmt = db_requests.stmt_sql_get_services()
+    rows = db.execute(stmt, **kwargs)
+
+    return rows
+
+
+def get_statusList(**kwargs):
+    """Get all values for order_status available"""
+    
+    stmt = db_requests.stmt_sql_get_status_list()
     rows = db.execute(stmt, **kwargs)
 
     return rows

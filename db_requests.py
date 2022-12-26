@@ -35,6 +35,20 @@ def stmt_sql_get_genders():
     return stmt
 
 
+def stmt_sql_get_status_list():
+    """Retrieve all status values"""
+
+    stmt = """
+    SELECT
+        statusList.svcos_name AS name
+    FROM service_order_status AS statusList
+    ORDER BY
+        statusList.svcos_id
+    """
+
+    return stmt
+
+
 def stmt_sql_get_customers():
     """Retrieve all customers"""
 
