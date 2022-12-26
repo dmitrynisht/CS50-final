@@ -166,9 +166,9 @@
                 <table class="table table-hover table-bordered caption-top mb-0" name="tOrderDetails">
                     <thead>
                         <tr>
-                            <th class="text-start border border-1" scope="col">Service (treatment) rendered</th>
-                            <th class="text-start border border-1" scope="col">Duration</th>
-                            <th class="text-start border border-1" scope="col">Price</th>
+                            <th class="text-start border border-1 border-dark" scope="col">Service (treatment) rendered</th>
+                            <th class="text-start border border-1 border-dark" scope="col">Duration</th>
+                            <th class="text-start border border-1 border-dark" scope="col">Price</th>
                         </tr>
                     </thead>
                     <tbody name="tbdOrderDetails">
@@ -193,7 +193,7 @@
                 <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-1 pb-0">
                     <div class="container-fluid">
                         <!-- Button trigger modal treatment selection-->
-                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-ptype="service">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-ptype="service" data-bs-tbody="tbdOrderDetails">
                             Select treatment
                         </button>
                     </div>
@@ -216,9 +216,7 @@
                 <table class="table table-hover table-bordered caption-top mb-0">
                     <thead>
                         <tr>
-
-                            <!-- </tr> class="border-bottom-2 border-dark"> -->
-                            
+                            <!-- Without header -->
                         </tr>
                     </thead>
                     <tbody name="tbdHomeSkinCare">
@@ -235,7 +233,7 @@
                 <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-1 pb-0">
                     <div class="container-fluid">
                         <!-- Button trigger modal treatment selection-->
-                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-ptype="commodity">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-ptype="commodity" data-bs-tbody="tbdHomeSkinCare">
                             Select products
                         </button>
                     </div>
@@ -288,22 +286,44 @@
                         </span>
                     </div>
                 </nav>
-
+                
+                <!-- Treatment plan table -->
                 <table class="table table-hover table-bordered caption-top mb-0">
                     <thead>
-                        <tr class="border-bottom-2 border-dark">
-                            
+                        <tr>
+                            <td class="text-start font-weight-bold text-muted border border-1" scope="col">Service (treatment) recommended</td>
+                            <td class="text-start font-weight-bold text-muted border border-1" scope="col">Duration (min)</td>
+                            <td class="text-start font-weight-bold text-muted border border-1" scope="col">Price ($)</td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody name="tbdTreatmentPlan">
                         <tr>
-                            <td class="text-start">
+                            <td class="text-start" name="service" product="Another good procedure" duration="45" price="45">
                                 <input class="d-none" name="service" type="text" value="">
                                 Another good procedure
+                            </td>
+                            <td class="text-start" name="duration">
+                                <input class="d-none" name="duration" type="text" value="">
+                                45
+                            </td>
+                            <td class="text-start" name="price">
+                                <input class="d-none" name="price" type="text" value="">
+                                45
                             </td>
                         </tr>
                     </tbody>    
                 </table>
+
+                <!-- Treatment plan table footer (treatment editor: adder)-->
+                <nav class="navbar navbar-expand navbar-light bg-light px-0 pt-1 pb-0">
+                    <div class="container-fluid">
+                        <!-- Button trigger modal treatment selection-->
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-ptype="service" data-bs-tbody="tbdTreatmentPlan">
+                            Select treatment
+                        </button>
+                    </div>
+                </nav>
+
             </div>
         </div>  
 
@@ -333,13 +353,10 @@
         // #####################################
         // #### UPDATE FOR DATETIME PICKING ####
         // #####################################
-        // alert('alert')
         let appointment = document.getElementById('pickerSource').value
         // let appDate = appointment.split(' ')[0]
         // let appTime = appointment.split(' ')[1]
         // alert('alert')
-
-        
         configflpkr = {
             enableTime: true,
             altInput: true,
@@ -348,11 +365,8 @@
             defaultDate: appointment,
             // altFormat: "F j, Y H:i",
             // dateFormat: "Y-m-d",
-            
         }
-
         $('.flflpicker').flatpickr(configflpkr)
-
         // alert("passed")
 
         let exampleModal = document.getElementById('exampleModal')
@@ -362,7 +376,9 @@
             var button = event.relatedTarget
             // Extract info from data-bs-* attributes
             let ptype = button.getAttribute('data-bs-ptype')
+            let tbody = button.getAttribute('data-bs-tbody')
             exampleModal.setAttribute("ptype", ptype)
+            exampleModal.setAttribute("tbody", tbody)
             
             var url = '/edit_product_list' +
             '?submitMode=' + ptype +
@@ -414,14 +430,15 @@
             var modalProdListHeader = document.createElement("h6")
             modalProdListHeader.setAttribute("class", "text-start")
             var modalTitle = exampleModal.querySelector('.modal-title')
+            var tbl = document.querySelector(`tbody[name="${tbody}"]`)
             if (ptype == 'service') {
                 modalTitle.textContent = 'Treatment selection'
                 modalProdListHeader.textContent = 'Treatment list:'
-                var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
+                // var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
             } else if (ptype == 'commodity') {
                 modalTitle.textContent = 'Product selection'
                 modalProdListHeader.textContent = 'Product list:'
-                var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
+                // var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
             } else {
                 modalTitle.textContent = `${ptype} selection`
                 modalProdListHeader.textContent = `${ptype} list:`
@@ -572,10 +589,12 @@
         modalBtnConfirm.addEventListener('click', function () {
             // alert("click confirm done")
             var ptype = exampleModal.getAttribute("ptype")
-            if (ptype == 'service') {
-                var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
-            } else if (ptype == 'commodity') {
-                var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
+            var tbody = exampleModal.getAttribute("tbody")
+            if ((ptype == 'service') || (ptype == 'commodity')) {
+                var tbl = document.querySelector(`tbody[name="${tbody}"]`)
+            //     var tbl = document.querySelector(`tbody[name="tbdOrderDetails"]`)
+            // } else if (ptype == 'commodity') {
+            //     var tbl = document.querySelector(`tbody[name="tbdHomeSkinCare"]`)
             } else {
                 alert("ptype not identified")
                 $('#exampleModal').modal('hide')
