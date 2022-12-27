@@ -6,6 +6,7 @@
 
 {% block main %}
     <div class="container">
+        <!-- Basic info -->
         <div class="row mb-0">
             <!-- Order info -->
             <div class="col-4 border me-2 pt-0 px-0">
@@ -19,11 +20,11 @@
                 <div class="container mx-0 pb-2 px-2">
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Order ID</span>
-                        <input type="text" class="form-control" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
+                        <input type="text" class="form-control ord_id" readonly placeholder="" aria-label="Order ID" aria-describedby="basic-addon1" name="ord_id" value="{{ ord_id }}">
                     </div>
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Order number</span>
-                        <input type="text" class="form-control" placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
+                        <input type="text" class="form-control ord_number" placeholder="" aria-label="Order number" aria-describedby="basic-addon1" name="ord_number" value="{{ ord_number }}">
                     </div>
                     <div class="input-group mb-1 pt-0">
                         <label class="input-group-text" for="ordStatusSelect">Order status</label>
@@ -64,7 +65,7 @@
                     <!-- ANY DATETIMEPICKER + -->
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Appointment date</span>
-                        <input id="pickerSource" type="text" class="form-control input flflpicker" placeholder="" aria-label="Treatment starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
+                        <input id="pickerSource" type="text" class="form-control input flflpicker ord_appointment_date" placeholder="" aria-label="Treatment starts" aria-describedby="basic-addon1" name="ord_appointment_date" value="{{ ord_appointment_date }}">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="bi bi-calendar3"></i>
@@ -74,11 +75,19 @@
                     <!-- ANY - -->
                     <div class="input-group mb-1 pt-0">
                         <span class="input-group-text" id="basic-addon1">Beautician</span>
-                        <input type="text" class="form-control" placeholder="" aria-label="Beautician" aria-describedby="basic-addon1" name="ord_beautician" value="{{ ord_beautician }}">
+                        <!-- <input type="text" class="form-control" placeholder="" aria-label="Beautician" aria-describedby="basic-addon1" name="ord_beautician" value="{{ ord_beautician }}"> -->
+                        <select class="form-select ord_beautician" id="ord_beautician" name="ord_beautician">
+                            {% if ord_beautician %}
+                                <option disabled="">Beautician</option>
+                            {% else %}
+                                <option disabled="" selected>Beautician</option>
+                            {% endif %}
+                            <option selected value="{{ ord_beautician }}">{{ ord_beautician }}</option>
+                        </select>
                     </div>
                     <div class="input-group mb-0 pt-0">
                         <span class="input-group-text" id="basic-addon1">Description</span>
-                        <input type="text" class="form-control" placeholder="" aria-label="Description" aria-describedby="basic-addon1" name="ord_description" value="{{ ord_description }}">
+                        <input type="text" class="form-control ord_description" placeholder="" aria-label="Description" aria-describedby="basic-addon1" name="ord_description" value="{{ ord_description }}">
                     </div>
                     <!-- <div class="input-group mb-1 pt-1">
                         <span class="input-group-text" id="basic-addon1">Urgent status (planned/urgent)</span>
@@ -140,11 +149,11 @@
             <div class="col me-0 pt-0 px-0">
                 <div class="input-group mb-2 pt-0">
                     <span class="input-group-text" id="basic-addon1">Complaints</span>
-                    <input type="text" class="form-control" placeholder="Complaints" aria-label="Complaints" aria-describedby="basic-addon1" name="ord_ctmr_complaints" value="{{ ord_ctmr_complaints }}">
+                    <input type="text" class="form-control ord_ctmr_complaints" placeholder="Complaints" aria-label="Complaints" aria-describedby="basic-addon1" name="ord_ctmr_complaints" value="{{ ord_ctmr_complaints }}">
                 </div>
                 <div class="input-group mb-0 pt-0">
                     <span class="input-group-text" id="basic-addon1">Skin condition</span>
-                    <input type="text" class="form-control" placeholder="Skin condition" aria-label="Skin condition" aria-describedby="basic-addon1" name="ord_skin_condition" value="{{ ord_skin_condition }}">
+                    <input type="text" class="form-control ord_skin_condition" placeholder="Skin condition" aria-label="Skin condition" aria-describedby="basic-addon1" name="ord_skin_condition" value="{{ ord_skin_condition }}">
                 </div>
             </div>
         </div>
@@ -329,6 +338,28 @@
 
     </div>
     
+    <nav class="navbar navbar-expand navbar-light bg-light mt-3 px-0 pt-0 pb-0">
+        <div class="container-fluid">
+            <button type="submit" class="btn btn-outline-success ml-auto saveInfo" name="submitMode" value="{{ submitMode }}">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square mb-1" viewBox="0 0 16 16">
+                    <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+                    <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                </svg> -->
+                <i class="bi bi-check2-square"></i>
+                {% if submitMode == "edit order details" %}
+                    Save changes
+                {% else %}
+                    Create
+                {% endif %}
+            </button>
+            <!-- {% if ctmr_subscribed=='1' %}
+                <button disabled type="button" class="btn btn-outline-secondary ctmr_subscribed active" data-bs-toggle="button" autocomplete="off" aria-pressed="true" name="ctmr_subscribed" value="{{ ctmr_subscribed }}">Subscribed</button>
+            {% else %}
+                <button disabled type="button" class="btn btn-outline-secondary ctmr_subscribed" data-bs-toggle="button" autocomplete="off" name="ctmr_subscribed" value="{{ ctmr_subscribed }}">Subscribe</button>
+            {% endif %} -->
+        </div>
+    </nav>
+
     <!-- Modal (treatment selection) -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
@@ -684,6 +715,69 @@
             // alert("apressed=" + apressed + ": (apressed == 'false') = " + (apressed == 'false'))
             // alert("############# apressed = false")
             // alert(`pressed=${apressed}; prod=${product}`)
+        }
+
+        let btnSave = document.querySelector(`button.saveInfo`);
+        btnSave.addEventListener('click', async function()
+        {
+            // Updating order details
+            let ord_id = document.querySelector(`input.ord_id`).value;
+            let ord_number = document.querySelector(`input.ord_number`).value;
+            let ord_status = document.querySelector(`select.ord_status`).value;
+            let ord_appointment_date = document.querySelector(`input.ord_appointment_date`).value;
+            let ord_beautician = document.querySelector(`select.ord_beautician`).value;
+            let ord_description = document.querySelector(`input.ord_description`).value;
+            let ord_ctmr_complaints = document.querySelector(`input.ord_ctmr_complaints`).value;
+            let ord_skin_condition = document.querySelector(`input.ord_skin_condition`).value;
+
+            let url = '/save_order_details' +
+            '?ord_id=' + ord_id +
+            '&ord_number=' + ord_number +
+            '&ord_status=' + ord_status +
+            '&ord_appointment_date=' + ord_appointment_date +
+            '&ord_beautician=' + ord_beautician +
+            '&ord_description=' + ord_description +
+            '&ord_ctmr_complaints=' + ord_ctmr_complaints +
+            '&ord_skin_condition=' + ord_skin_condition +
+            '&tbl_service_rendered=' + tableStringify("tbdOrderDetails")
+
+            try {
+                let response = await fetch(url);
+                var trn_data = await response.json();
+            } catch (error) {
+                alert('There was a problem while processing request: error.name=' + error.name + '; error.msg=' + error.msg + ';');
+                return
+            }
+            if (!trn_data["trn_complete"]) {
+                alert("trn_complete: " + trn_data["trn_complete"]  + ". AN ERROR OCCURED WHILE SAVING DATA");
+                return
+            }
+            alert("success");
+        })
+
+        function tableStringify(name) {
+            // var tbl = new Array()
+            // var row = {
+            //         item1: "active",
+            //         item2: "asdf",
+            //     }
+            // // Something to be inserted
+            // tbl.push(row)
+            // tbl.push(row)
+            // alert(JSON.stringify(tbl))
+            var tbl = new Array()
+            var docTable = document.querySelector(`tbody[name="${name}"]`)
+            var docTblRows = docTable.querySelectorAll(`tr`)
+            for (var docRow of docTblRows) {
+                var row = new Object()
+                var docColumn = docRow.querySelector(`td`)
+                row["product"] = docColumn.getAttribute("product")
+                row["duration"] = docColumn.getAttribute("duration")
+                row["price"] = docColumn.getAttribute("price")
+                tbl.push(row)
+            }
+            alert(JSON.stringify(tbl))
+            return JSON.stringify(tbl)
         }
 
     </script>

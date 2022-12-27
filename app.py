@@ -238,6 +238,24 @@ def save_customer_info():
     return trn_data
 
 
+@app.route("/save_order_details", methods=["GET", "POST"])
+@login_required
+def save_order_details():
+    """Save detailed order info"""
+
+    trn_data = {
+        'trn_complete': False,
+    }
+
+    requestMethod = request.method
+    if requestMethod == "POST":
+        submitMode = request.form.get("submitMode", '')
+    else:
+        submitMode = request.args.get("submitMode", '')
+
+    return trn_data
+
+
 @app.route("/svc_order_details", methods=["GET", "POST"])
 @login_required
 def svc_order_details():

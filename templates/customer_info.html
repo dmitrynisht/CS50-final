@@ -210,7 +210,7 @@
             '&ctmr_contraindications=' + ctmr_contraindications +
             '&ctmr_additional_info=' + ctmr_additional_info +
             '&ctmr_subscribed=' + ctmr_subscribed;
-            alert(url);
+            // alert(url);
             try {
                 let response = await fetch(url);
                 var trn_data = await response.json();
