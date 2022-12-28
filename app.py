@@ -294,6 +294,7 @@ def svc_order_details():
             ctmr_contraindications=request.args.get("ctmr_contraindications", ''),
             ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
             ordStatusList=get_statusList(),
+            ordBeauticiansList=get_usersByRole(role_name="beautician"),
             tbdOrderDetails=tbdOrderDetails,
             tbdHomeSkinCare=tbdHomeSkinCare,
             tbdTreatmentPlan=tbdTreatmentPlan,
@@ -717,6 +718,15 @@ def get_statusList(**kwargs):
     """Get all values for order_status available"""
     
     stmt = db_requests.stmt_sql_get_status_list()
+    rows = db.execute(stmt, **kwargs)
+
+    return rows
+
+
+def get_usersByRole(**kwargs):
+    """Get all users filtered by role"""
+    
+    stmt = db_requests.stmt_sql_get_users_list()
     rows = db.execute(stmt, **kwargs)
 
     return rows

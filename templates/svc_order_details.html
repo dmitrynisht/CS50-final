@@ -82,7 +82,13 @@
                             {% else %}
                                 <option disabled="" selected>Beautician</option>
                             {% endif %}
-                            <option selected value="{{ ord_beautician }}">{{ ord_beautician }}</option>
+                            {% for beautician in ordBeauticiansList %}
+                                {% if beautician.usr_login==ord_beautician %}
+                                    <option selected value="{{ beautician.usr_login }}">{{ beautician.usr_login }}</option>
+                                {% else %}
+                                    <option value="{{ beautician.usr_login }}">{{ beautician.usr_login }}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="input-group mb-0 pt-0">

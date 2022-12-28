@@ -7,6 +7,21 @@ def stmt_sql_get_user():
     return stmt
 
 
+def stmt_sql_get_users_list():
+    """Search for user by rolename provided"""
+
+    stmt = """
+    SELECT
+        users.usr_login AS usr_login
+    FROM users
+    WHERE users.role_name=:role_name
+    ORDER BY
+        users.usr_id
+    """
+
+    return stmt
+
+
 def stmt_sql_get_skin_types():
     """Retrieve all skin types"""
 
