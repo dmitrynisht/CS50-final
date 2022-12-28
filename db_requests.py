@@ -179,6 +179,47 @@ def stmt_sql_upd_customer_order():
     return stmt
 
 
+def stmt_sql_get_service_rendered():
+    """Get services rendered within order"""
+
+    stmt = """
+    SELECT
+        service.svc_ord_number AS ord_number,
+        service.svcos_name AS ord_status,
+        service.prod_name AS product,
+        service.duration AS duration,
+        service.price AS price
+    FROM service_rendered AS service
+    WHERE service.svc_ord_number=:ord_number
+    ORDER BY
+        service.svc_rnd_id
+    """
+
+    return stmt
+
+
+def stmt_sql_ins_service_rendered():
+    """Insert new service rendered"""
+
+    stmt = """
+    INSERT INTO service_rendered (svc_ord_number, svcos_name, prod_name, duration, price)
+    VALUES (:ord_number, :ord_status, :product, :duration, :price)
+    """
+
+    return stmt
+
+
+def stmt_sql_del_services_rendered():
+    """Delete rendered services"""
+
+    stmt = """
+    DELETE FROM service_rendered
+    WHERE svc_ord_number=:ord_number
+    """
+
+    return stmt
+
+
 def stmt_sql_get_services():
     """Select services or commodities which are available.
     Item is available if it's 'unavailability' flag (prod_na) is off, i.e. prod_na=0.

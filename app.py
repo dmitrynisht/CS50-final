@@ -5,7 +5,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime as dt
 from helpers import mkappdir, filter_customers, validate_customer, validate_customer_order, login_required, apology
-import db_requests
+import db_requests, json
 
 
 # Configure application
@@ -272,6 +272,8 @@ def save_order_details():
                 # update_order_details() is decorated by validate_customer_order()
                 # validate_customer_order() invokes get_service_order_details() which is passed by name to get_order_details argument
                 rows = update_order_details(get_order_details=get_service_order_details, requestMethod=requestMethod, kwargs={})
+
+                rows = update_services_rendered(requestMethod=requestMethod, kwargs={})
                 trn_data['trn_complete'] = True
 
             except AssertionError as error_msg:
@@ -305,11 +307,13 @@ def svc_order_details():
         ord_description = order_details["ord_description"]
         ord_ctmr_complaints = order_details["ord_ctmr_complaints"]
         ord_skin_condition = order_details["ord_skin_condition"]
+        tbdOrderDetails = get_service_rendered(ord_number=ord_number)
         rows = []
     else:
         ord_number=request.args.get("ord_number", '')
         ord_date=request.args.get("ord_date", '')
         ord_appointment_date=request.args.get("ord_appointment_date", '')
+        tbdOrderDetails = []
         rows = []
 
     return render_template("svc_order_details.html",
@@ -333,6 +337,7 @@ def svc_order_details():
             ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
             rows=request.args.get("rows", rows),
             ordStatusList=get_statusList(),
+            tbdOrderDetails=tbdOrderDetails,
             )
 
 
@@ -510,6 +515,61 @@ def update_order_details(*, kwargs):
     """Update customer's order details"""
     
     stmt = db_requests.stmt_sql_upd_customer_order()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+# @validate_services_rendered
+def update_services_rendered(*, requestMethod, kwargs):
+    """Update services rendered within order"""
+
+    if requestMethod == "POST":
+        ord_number = request.form.get("ord_number", '')
+        ord_status = request.form.get("ord_status", '')
+        tbl_service_rendered_new = request.form.get("tbl_service_rendered", '')
+    else:
+        ord_number = request.args.get("ord_number", '')
+        ord_status = request.args.get("ord_status", '')
+        tbl_service_rendered_new = request.args.get("tbl_service_rendered", '')
+
+    tbl_service_rendered_new = json.loads(tbl_service_rendered_new)
+    # validating data for changes
+    tbl_service_rendered_old = get_service_rendered(ord_number=ord_number)
+    new_t = tuple(svr["product"] for svr in tbl_service_rendered_new)
+    old_t = tuple(svr["product"] for svr in tbl_service_rendered_old)
+    if new_t == old_t:
+        return []
+    # data was modified clear old rendered services
+    rows = clear_old_rendered_services(ord_number=ord_number)
+
+    rows = []
+    kwargs = {
+        "ord_number": ord_number,
+        "ord_status": ord_status,
+    }
+    stmt = db_requests.stmt_sql_ins_service_rendered()
+    for service in tbl_service_rendered_new:
+        kwargs.update(dict(service))
+        row = db.execute(stmt, **kwargs)
+        rows.append("row")
+
+    return rows
+
+
+def get_service_rendered(**kwargs):
+    """Get services rendered within order"""
+
+    stmt = db_requests.stmt_sql_get_service_rendered()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def clear_old_rendered_services(**kwargs):
+    """Delete rendered services"""
+    
+    stmt = db_requests.stmt_sql_del_services_rendered()
     rows = db.execute(stmt, **kwargs)
     
     return rows

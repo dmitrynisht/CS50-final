@@ -181,20 +181,39 @@
                         </tr>
                     </thead>
                     <tbody name="tbdOrderDetails">
-                        <tr>
-                            <td class="text-start" name="service" product="Initial assessment" duration="15" price="0">
-                                <input class="d-none" name="service" type="text" value="">
-                                Initial assessment
-                            </td>
-                            <td class="text-start" name="duration">
-                                <input class="d-none" name="duration" type="text" value="">
-                                15
-                            </td>
-                            <td class="text-start" name="price">
-                                <input class="d-none" name="price" type="text" value="">
-                                0
-                            </td>
-                        </tr>
+                        {% if tbdOrderDetails %}
+                            {% for service in tbdOrderDetails %}
+                                <tr>
+                                    <td class="text-start" name="service" product="{{ service.product }}" duration="{{ service.duration }}" price="{{ service.price }}">
+                                        <input class="d-none" name="service" type="text" value="">
+                                        {{ service.product }}
+                                    </td>
+                                    <td class="text-start" name="duration">
+                                        <input class="d-none" name="duration" type="text" value="">
+                                        {{ service.duration }}
+                                    </td>
+                                    <td class="text-start" name="price">
+                                        <input class="d-none" name="price" type="text" value="">
+                                        {{ service.price }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="text-start" name="service" product="Initial assessment" duration="15" price="0">
+                                    <input class="d-none" name="service" type="text" value="">
+                                    Initial assessment
+                                </td>
+                                <td class="text-start" name="duration">
+                                    <input class="d-none" name="duration" type="text" value="">
+                                    15
+                                </td>
+                                <td class="text-start" name="price">
+                                    <input class="d-none" name="price" type="text" value="">
+                                    0
+                                </td>
+                            </tr>                            
+                        {% endif %}
                     </tbody>    
                 </table>
                 

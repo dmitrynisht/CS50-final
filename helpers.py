@@ -83,8 +83,9 @@ def validate_customer_order(func):
             if len(rows) >= 1:
                 row = rows[0]
                 if (row["ord_number"], row["ord_status"], dt.fromisoformat(row["ord_appointment_date"]), row["ord_beautician"], row["ord_description"], row["ord_ctmr_complaints"], row["ord_skin_condition"]) == (ord_number, ord_status, dt.fromisoformat(ord_appointment_date), ord_beautician, ord_description, ord_ctmr_complaints, ord_skin_condition):
-                    check_failed = True
+                    check_failed = False
                     error_msg = "Nothing to change"
+                    return []
             else:
                 check_failed = True
                 error_msg = "Unexpected mistake while processing order details. No order found by provided ID"
@@ -101,8 +102,6 @@ def validate_customer_order(func):
             "ord_description": ord_description,
             "ord_ctmr_complaints": ord_ctmr_complaints,
             "ord_skin_condition": ord_skin_condition,
-            # "ctmr_additional_info": ctmr_additional_info,
-            # "ctmr_subscribed": ctmr_subscribed,
         }
 
         if submitMode == "edit order details":
