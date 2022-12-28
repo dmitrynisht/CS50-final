@@ -755,16 +755,8 @@
             alert("success");
         })
 
+        // Creating JS object from html table
         function tableStringify(name) {
-            // var tbl = new Array()
-            // var row = {
-            //         item1: "active",
-            //         item2: "asdf",
-            //     }
-            // // Something to be inserted
-            // tbl.push(row)
-            // tbl.push(row)
-            // alert(JSON.stringify(tbl))
             var tbl = new Array()
             var docTable = document.querySelector(`tbody[name="${name}"]`)
             var docTblRows = docTable.querySelectorAll(`tr`)
