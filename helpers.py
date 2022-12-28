@@ -1,5 +1,6 @@
 from flask import flash, redirect, render_template, request, session
 from functools import wraps
+from datetime import datetime as dt
 
 
 def mkappdir():
@@ -22,9 +23,99 @@ def mkappdir():
     return mkdtemp(prefix=app_dir_prefix, suffix=app_dir_suffix, dir=dir)
 
 
+def validate_customer_order(func):
+    """
+    Decorate create_order_details() and update_order_details()
+    provide data validation before update/create customer's order
+    """
+    @wraps(func)
+    def decorated_function(*args, get_order_details, requestMethod, **kwargs):
+        if requestMethod == "POST":
+            submitMode = request.form.get("submitMode", '')
+            ord_id = request.form.get("ord_id", '')
+            ord_number = request.form.get("ord_number", '')
+            ord_status = request.form.get("ord_status", '')
+            ord_appointment_date = request.form.get("ord_appointment_date", '')
+            ord_beautician = request.form.get("ord_beautician", '')
+            ord_description = request.form.get("ord_description", '')
+            ord_ctmr_complaints = request.form.get("ord_ctmr_complaints", '')
+            ord_skin_condition = request.form.get("ord_skin_condition", '')
+        else:
+            submitMode = request.args.get("submitMode", '')
+            ord_id = request.args.get("ord_id", '')
+            ord_number = request.args.get("ord_number", '')
+            ord_status = request.args.get("ord_status", '')
+            ord_appointment_date = request.args.get("ord_appointment_date", '')
+            ord_beautician = request.args.get("ord_beautician", '')
+            ord_description = request.args.get("ord_description", '')
+            ord_ctmr_complaints = request.args.get("ord_ctmr_complaints", '')
+            ord_skin_condition = request.args.get("ord_skin_condition", '')
+
+        ord_appointment_date = dt.fromisoformat(ord_appointment_date)
+        ord_appointment_date = ord_appointment_date.isoformat()
+        check_failed = False
+        error_msg = ""
+
+        # Ensure ord_number was submitted
+        if not ord_number:
+            check_failed = True
+            error_msg = "must provide unique Order number for order"
+
+        # Ensure ord_status was submitted
+        if not ord_status:
+            check_failed = True
+            error_msg = "must provide Order status"
+
+        # Ensure ord_appointment_date was submitted
+        if not ord_appointment_date:
+            check_failed = True
+            error_msg = "must provide Appointment date for order"
+
+        # Ensure ord_beautician was submitted
+        if not ord_beautician:
+            check_failed = True
+            error_msg = "must provide Beautician for order"
+
+        if check_failed:
+            pass
+        else:
+            rows = get_order_details(ord_id=ord_id)
+            if len(rows) >= 1:
+                row = rows[0]
+                if (row["ord_number"], row["ord_status"], dt.fromisoformat(row["ord_appointment_date"]), row["ord_beautician"], row["ord_description"], row["ord_ctmr_complaints"], row["ord_skin_condition"]) == (ord_number, ord_status, dt.fromisoformat(ord_appointment_date), ord_beautician, ord_description, ord_ctmr_complaints, ord_skin_condition):
+                    check_failed = True
+                    error_msg = "Nothing to change"
+            else:
+                check_failed = True
+                error_msg = "Unexpected mistake while processing order details. No order found by provided ID"
+
+        if check_failed:
+            # Implement better Exception handling
+            assert False, error_msg
+
+        kwargs = {
+            "ord_number": ord_number,
+            "ord_status": ord_status,
+            "ord_appointment_date": ord_appointment_date,
+            "ord_beautician": ord_beautician,
+            "ord_description": ord_description,
+            "ord_ctmr_complaints": ord_ctmr_complaints,
+            "ord_skin_condition": ord_skin_condition,
+            # "ctmr_additional_info": ctmr_additional_info,
+            # "ctmr_subscribed": ctmr_subscribed,
+        }
+
+        if submitMode == "edit order details":
+            kwargs["ord_id"] = ord_id
+
+        return func(kwargs=kwargs)
+
+    return decorated_function
+
+
 def validate_customer(func):
     """
-    Decorate create_customer() to provide data validation before update/create
+    Decorate create_customer() and update_customer() to provide data validation before update/create
     """
     @wraps(func)
     def decorated_function(*args, get_customers, requestMethod, **kwargs):

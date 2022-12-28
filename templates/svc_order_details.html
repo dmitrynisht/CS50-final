@@ -731,7 +731,8 @@
             let ord_skin_condition = document.querySelector(`input.ord_skin_condition`).value;
 
             let url = '/save_order_details' +
-            '?ord_id=' + ord_id +
+            '?submitMode=' + btnSave.value +
+            '&ord_id=' + ord_id +
             '&ord_number=' + ord_number +
             '&ord_status=' + ord_status +
             '&ord_appointment_date=' + ord_appointment_date +
@@ -745,11 +746,11 @@
                 let response = await fetch(url);
                 var trn_data = await response.json();
             } catch (error) {
-                alert('There was a problem while processing request: error.name=' + error.name + '; error.msg=' + error.msg + ';');
+                alert(`There was a problem while processing request: error.name=${error.name}; error.msg=${error.msg};`);
                 return
             }
             if (!trn_data["trn_complete"]) {
-                alert("trn_complete: " + trn_data["trn_complete"]  + ". AN ERROR OCCURED WHILE SAVING DATA");
+                alert(`trn_complete: ${trn_data["trn_complete"]}; AN ERROR OCCURED WHILE SAVING DATA: ${trn_data["error_msg"]};`);
                 return
             }
             alert("success");
@@ -768,7 +769,7 @@
                 row["price"] = docColumn.getAttribute("price")
                 tbl.push(row)
             }
-            alert(JSON.stringify(tbl))
+            // alert(JSON.stringify(tbl))
             return JSON.stringify(tbl)
         }
 

@@ -118,7 +118,7 @@ def stmt_sql_ins_customer():
 
 
 def stmt_sql_upd_customer():
-    """Update customer info"""
+    """Update customer's info"""
 
     stmt = """
     UPDATE customers
@@ -164,6 +164,18 @@ def stmt_sql_get_customer_order_info():
     WHERE (sv_ord.svc_ord_id=:ord_id)
     """
 
+    return stmt
+
+
+def stmt_sql_upd_customer_order():
+    """Update customer's order details"""
+
+    stmt = """
+    UPDATE service_orders
+    SET svc_ord_number=:ord_number, svc_ord_appointment_date=:ord_appointment_date, svcos_name=:ord_status, usr_login=:ord_beautician, svc_ord_description=:ord_description, svc_ord_ctmr_complaints=:ord_ctmr_complaints, svc_ord_skin_condition=:ord_skin_condition
+    WHERE svc_ord_id=:ord_id
+    """
+    
     return stmt
 
 

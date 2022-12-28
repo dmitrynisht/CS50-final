@@ -215,11 +215,11 @@
                 let response = await fetch(url);
                 var trn_data = await response.json();
             } catch (error) {
-                alert('There was a problem while processing request: error.name=' + error.name + '; error.msg=' + error.msg + ';');
+                alert(`There was a problem while processing request: error.name=${error.name}; error.msg=${error.msg};`);
                 return
             }
             if (!trn_data["trn_complete"]) {
-                alert("trn_complete: " + trn_data["trn_complete"]  + ". AN ERROR OCCURED WHILE SAVING DATA");
+                alert(`trn_complete: ${trn_data["trn_complete"]}; AN ERROR OCCURED WHILE SAVING DATA: ${trn_data["error_msg"]};`);
                 return
             }
         });

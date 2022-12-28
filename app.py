@@ -4,7 +4,7 @@ from cs50 import SQL
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime as dt
-from helpers import mkappdir, filter_customers, validate_customer, login_required, apology
+from helpers import mkappdir, filter_customers, validate_customer, validate_customer_order, login_required, apology
 import db_requests
 
 
@@ -186,7 +186,7 @@ def save_customer_info():
 
     trn_data = {
         'trn_complete': False,
-        # 'ctmr_id':        total,
+        'error_msg': "",
     }
 
     requestMethod = request.method
@@ -204,14 +204,19 @@ def save_customer_info():
                 # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
                 ctmr_id = create_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
                 submitMode = "edit customer info"
-            except AssertionError:
-                error_msg = "Unverified data!"
+                trn_data['trn_complete'] = True
+
+            except AssertionError as error_msg:
                 ctmr_id = ""
-                flash(error_msg)
+                # error_msg = "Unverified data!"
+                # flash(error_msg)
+                trn_data["error_msg"] = error_msg
+
             except:
                 error_msg = "Customer already exists"
                 ctmr_id = ""
-                flash(error_msg)
+                # flash(error_msg)
+                trn_data["error_msg"] = error_msg
 
         else:
             # Implement better Exception handling:
@@ -220,20 +225,19 @@ def save_customer_info():
                 # update_customer() is decorated by validate_customer()
                 # validate_customer() invokes get_customers()/get_customer_info() which is passed by name to get_customers argument
                 rows = update_customer(get_customers=get_customer_info, requestMethod=requestMethod, kwargs={})
-            except AssertionError:
+                trn_data['trn_complete'] = True
+
+            except AssertionError as error_msg:
                 # error_msg = "Unverified data!"
                 # flash(error_msg)
-                pass
+                trn_data["error_msg"] = error_msg.args
+
             except:
                 # Implement better Exception handling:
                 #   when check_failed Exception occured
                 error_msg = "SOMETHING WENT WRONG!"
-                flash(error_msg)
-
-        trn_data = {
-            'trn_complete': True,
-            # 'ctmr_id':        total,
-        }
+                # flash(error_msg)
+                trn_data["error_msg"] = error_msg
 
     return trn_data
 
@@ -245,6 +249,7 @@ def save_order_details():
 
     trn_data = {
         'trn_complete': False,
+        'error_msg': "",
     }
 
     requestMethod = request.method
@@ -252,6 +257,29 @@ def save_order_details():
         submitMode = request.form.get("submitMode", '')
     else:
         submitMode = request.args.get("submitMode", '')
+
+    if submitMode in ["new order", "edit order details"]:
+        if submitMode == "new order":
+            try:
+                # do something here
+                # rows = save_order_details()
+                pass
+
+            except:pass
+
+        else:
+            try:
+                # update_order_details() is decorated by validate_customer_order()
+                # validate_customer_order() invokes get_service_order_details() which is passed by name to get_order_details argument
+                rows = update_order_details(get_order_details=get_service_order_details, requestMethod=requestMethod, kwargs={})
+                trn_data['trn_complete'] = True
+
+            except AssertionError as error_msg:
+                trn_data["error_msg"] = error_msg.args
+                
+            except:
+                error_msg = "SOMETHING WENT WRONG!"
+                trn_data["error_msg"] = error_msg
 
     return trn_data
 
@@ -441,7 +469,7 @@ def get_customer_info(*, kwargs):
 
 @validate_customer
 def create_customer(*, kwargs):
-    """"""
+    """Insert new customer"""
 
     stmt = db_requests.stmt_sql_ins_customer()
     rows = db.execute(stmt, **kwargs)
@@ -451,7 +479,7 @@ def create_customer(*, kwargs):
 
 @validate_customer
 def update_customer(*, kwargs):
-    """"""
+    """Update customer's info"""
     
     stmt = db_requests.stmt_sql_upd_customer()
     rows = db.execute(stmt, **kwargs)
@@ -472,6 +500,16 @@ def get_service_order_details(**kwargs):
     """Retrieve all data by service order id provided"""
 
     stmt = db_requests.stmt_sql_get_customer_order_info()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+@validate_customer_order
+def update_order_details(*, kwargs):
+    """Update customer's order details"""
+    
+    stmt = db_requests.stmt_sql_upd_customer_order()
     rows = db.execute(stmt, **kwargs)
     
     return rows
