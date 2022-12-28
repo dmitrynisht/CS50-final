@@ -199,7 +199,7 @@ def stmt_sql_get_service_rendered():
 
 
 def stmt_sql_ins_service_rendered():
-    """Insert new service rendered"""
+    """Insert new service rendered into order"""
 
     stmt = """
     INSERT INTO service_rendered (svc_ord_number, svcos_name, prod_name, duration, price)
@@ -220,8 +220,24 @@ def stmt_sql_del_services_rendered():
     return stmt
 
 
+def stmt_sql_get_service_homecare():
+    """Get homecare products within order"""
+
+    stmt = """
+    SELECT
+        service.svc_ord_number AS ord_number,
+        service.prod_name AS product
+    FROM service_home_care AS service
+    WHERE service.svc_ord_number=:ord_number
+    ORDER BY
+        service.svc_hcr_id
+    """
+
+    return stmt
+
+
 def stmt_sql_ins_service_homecare():
-    """Insert home care recommendations within order"""
+    """Insert home care recommendations into order"""
 
     stmt = """
     INSERT INTO service_home_care (svc_ord_number, prod_name)
@@ -242,17 +258,40 @@ def stmt_sql_del_service_homecare():
     return stmt
 
 
-def stmt_sql_get_service_homecare():
-    """Get homecare products within order"""
+def stmt_sql_get_service_trt_plan():
+    """Get treatment plan within order"""
 
     stmt = """
     SELECT
-        service.svc_ord_number AS ord_number,
-        service.prod_name AS product
-    FROM service_home_care AS service
-    WHERE service.svc_ord_number=:ord_number
+        treatmentp.svc_ord_number AS ord_number,
+        treatmentp.prod_name AS product,
+        treatmentp.duration AS duration,
+        treatmentp.price AS price
+    FROM service_trt_plan AS treatmentp
+    WHERE treatmentp.svc_ord_number=:ord_number
     ORDER BY
-        service.svc_hcr_id
+        treatmentp.svc_trtp_id
+    """
+
+    return stmt
+
+
+def stmt_sql_ins_service_trt_plan():
+    """Insert treatment plan into order"""
+
+    stmt = """
+    INSERT INTO service_trt_plan (svc_ord_number, prod_name, duration, price)
+    VALUES (:ord_number, :product, :duration, :price)
+    """
+
+    return stmt
+
+def stmt_sql_del_service_trt_plan():
+    """Delete treatment plan within order"""
+
+    stmt = """
+    DELETE FROM service_trt_plan
+    WHERE svc_ord_number=:ord_number
     """
 
     return stmt

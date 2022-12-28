@@ -199,20 +199,20 @@
                                 </tr>
                             {% endfor %}
                         {% else %}
-                            <tr>
-                                <td class="text-start" name="service" product="Initial assessment" duration="15" price="0">
-                                    <input class="d-none" name="service" type="text" value="">
-                                    Initial assessment
-                                </td>
-                                <td class="text-start" name="duration">
-                                    <input class="d-none" name="duration" type="text" value="">
-                                    15
-                                </td>
-                                <td class="text-start" name="price">
-                                    <input class="d-none" name="price" type="text" value="">
-                                    0
-                                </td>
-                            </tr>                            
+                            <!-- <tr> -->
+                                <!-- <td class="text-start" name="service" product="Initial assessment" duration="15" price="0"> -->
+                                    <!-- <input class="d-none" name="service" type="text" value=""> -->
+                                    <!-- Initial assessment -->
+                                <!-- </td> -->
+                                <!-- <td class="text-start" name="duration"> -->
+                                    <!-- <input class="d-none" name="duration" type="text" value=""> -->
+                                    <!-- 15 -->
+                                <!-- </td> -->
+                                <!-- <td class="text-start" name="price"> -->
+                                    <!-- <input class="d-none" name="price" type="text" value=""> -->
+                                    <!-- 0 -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
                         {% endif %}
                     </tbody>    
                 </table>
@@ -258,12 +258,12 @@
                                 </tr>
                             {% endfor %}
                         {% else %}
-                            <tr>
-                                <td class="text-start" name="commodity" product="Some useful product" prod_how_to_use = "how to use">
-                                    <input class="d-none" name="commodity" type="text" value="">
-                                    Some useful product
-                                </td>
-                            </tr>
+                            <!-- <tr> -->
+                                <!-- <td class="text-start" name="commodity" product="Some useful product" prod_how_to_use = "how to use"> -->
+                                    <!-- <input class="d-none" name="commodity" type="text" value=""> -->
+                                    <!-- Some useful product -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
                         {% endif %}
                     </tbody>    
                 </table>
@@ -336,20 +336,39 @@
                         </tr>
                     </thead>
                     <tbody name="tbdTreatmentPlan">
-                        <tr>
-                            <td class="text-start" name="service" product="Another good procedure" duration="45" price="45">
-                                <input class="d-none" name="service" type="text" value="">
-                                Another good procedure
-                            </td>
-                            <td class="text-start" name="duration">
-                                <input class="d-none" name="duration" type="text" value="">
-                                45
-                            </td>
-                            <td class="text-start" name="price">
-                                <input class="d-none" name="price" type="text" value="">
-                                45
-                            </td>
-                        </tr>
+                        {% if tbdTreatmentPlan %}
+                            {% for service in tbdTreatmentPlan %}
+                                <tr>
+                                    <td class="text-start" name="service" product="{{ service.product }}" duration="{{ service.duration }}" price="{{ service.price }}">
+                                        <input class="d-none" name="service" type="text" value="">
+                                        {{ service.product }}
+                                    </td>
+                                    <td class="text-start" name="duration">
+                                        <input class="d-none" name="duration" type="text" value="">
+                                        {{ service.duration }}
+                                    </td>
+                                    <td class="text-start" name="price">
+                                        <input class="d-none" name="price" type="text" value="">
+                                        {{ service.price }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <!-- <tr> -->
+                                <!-- <td class="text-start" name="service" product="Another good procedure" duration="45" price="45"> -->
+                                    <!-- <input class="d-none" name="service" type="text" value=""> -->
+                                    <!-- Another good procedure -->
+                                <!-- </td> -->
+                                <!-- <td class="text-start" name="duration"> -->
+                                    <!-- <input class="d-none" name="duration" type="text" value=""> -->
+                                    <!-- 45 -->
+                                <!-- </td> -->
+                                <!-- <td class="text-start" name="price"> -->
+                                    <!-- <input class="d-none" name="price" type="text" value=""> -->
+                                    <!-- 45 -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
+                        {% endif %}
                     </tbody>    
                 </table>
 
@@ -796,7 +815,8 @@
             '&ord_ctmr_complaints=' + ord_ctmr_complaints +
             '&ord_skin_condition=' + ord_skin_condition +
             '&tbl_service_rendered=' + tableStringify("tbdOrderDetails") +
-            '&tbl_service_homecare=' + tableStringify("tbdHomeSkinCare")
+            '&tbl_service_homecare=' + tableStringify("tbdHomeSkinCare") +
+            '&tbl_treatment_plan=' + tableStringify("tbdTreatmentPlan")
 
             try {
                 let response = await fetch(url);
@@ -809,7 +829,7 @@
                 alert(`trn_complete: ${trn_data["trn_complete"]}; AN ERROR OCCURED WHILE SAVING DATA: ${trn_data["error_msg"]};`);
                 return
             }
-            alert("success");
+            // alert("success");
         })
 
         // Creating JS object from html table

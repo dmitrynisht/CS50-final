@@ -242,6 +242,64 @@ def save_customer_info():
     return trn_data
 
 
+@app.route("/svc_order_details", methods=["GET", "POST"])
+@login_required
+def svc_order_details():
+    """Order details"""
+
+    s_action = "/svc_order_details"
+    submitMode = request.args.get("submitMode", '')
+    ord_id=request.args.get("ord_id", '')
+    if submitMode == "edit order details":
+        # retrieve order details
+        rows = get_service_order_details(ord_id=ord_id)
+        order_details = rows[0]
+        ord_id = order_details["ord_id"]
+        ord_number = order_details["ord_number"]
+        ord_status = order_details["ord_status"]
+        ord_date = order_details["ord_date"]
+        ord_appointment_date = order_details["ord_appointment_date"]
+        ord_beautician = order_details["ord_beautician"]
+        ord_description = order_details["ord_description"]
+        ord_ctmr_complaints = order_details["ord_ctmr_complaints"]
+        ord_skin_condition = order_details["ord_skin_condition"]
+        tbdOrderDetails = get_service_rendered(ord_number=ord_number)
+        tbdHomeSkinCare = get_service_homecare(ord_number=ord_number)
+        tbdTreatmentPlan = get_treatment_plan(ord_number=ord_number)
+    else:
+        ord_number=request.args.get("ord_number", '')
+        ord_date=request.args.get("ord_date", '')
+        ord_appointment_date=request.args.get("ord_appointment_date", '')
+        tbdOrderDetails = []
+        tbdHomeSkinCare = []
+        tbdTreatmentPlan = []
+
+    return render_template("svc_order_details.html",
+            s_action=s_action,
+            submitMode=submitMode,
+            ord_id=ord_id,
+            ord_number=ord_number,
+            ord_status=ord_status,
+            ord_date=ord_date,
+            ord_appointment_date=ord_appointment_date,
+            ord_beautician=ord_beautician,
+            ord_description=ord_description,
+            ord_ctmr_complaints=ord_ctmr_complaints,
+            ord_skin_condition=ord_skin_condition,
+            ctmr_uid=request.args.get("ctmr_uid", ''),
+            ctmr_fname=request.args.get("ctmr_fname", ''),
+            ctmr_lname=request.args.get("ctmr_lname", ''),
+            ctmr_gender=request.args.get("ctmr_gender", ''),
+            ctmr_email=request.args.get("ctmr_email", ''),
+            ctmr_contraindications=request.args.get("ctmr_contraindications", ''),
+            ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
+            ordStatusList=get_statusList(),
+            tbdOrderDetails=tbdOrderDetails,
+            tbdHomeSkinCare=tbdHomeSkinCare,
+            tbdTreatmentPlan=tbdTreatmentPlan,
+            )
+
+
 @app.route("/save_order_details", methods=["GET", "POST"])
 @login_required
 def save_order_details():
@@ -268,7 +326,7 @@ def save_order_details():
             except:pass
 
         else:
-            # try:
+            try:
                 # update_order_details() is decorated by validate_customer_order()
                 # validate_customer_order() invokes get_service_order_details() which is passed by name to get_order_details argument
                 rows = update_order_details(get_order_details=get_service_order_details, requestMethod=requestMethod, kwargs={})
@@ -277,71 +335,18 @@ def save_order_details():
                 
                 rows = update_services_homecare(requestMethod=requestMethod, kwargs={})
 
+                rows = update_treatment_plan(requestMethod=requestMethod, kwargs={})
+
                 trn_data['trn_complete'] = True
 
-            # except AssertionError as error_msg:
-            #     trn_data["error_msg"] = error_msg.args
+            except AssertionError as error_msg:
+                trn_data["error_msg"] = error_msg.args
                 
-            # except:
-            #     error_msg = "SOMETHING WENT WRONG!"
-            #     trn_data["error_msg"] = error_msg
+            except:
+                error_msg = "SOMETHING WENT WRONG!"
+                trn_data["error_msg"] = error_msg
 
     return trn_data
-
-
-@app.route("/svc_order_details", methods=["GET", "POST"])
-@login_required
-def svc_order_details():
-    """Order details"""
-
-    s_action = "/svc_order_details"
-    submitMode = request.args.get("submitMode", '')
-    ord_id=request.args.get("ord_id", '')
-    if submitMode == "edit order details":
-        # retrieve order details
-        rows = get_service_order_details(ord_id=ord_id)
-        order_details = rows[0]
-        ord_id = order_details["ord_id"]
-        ord_number = order_details["ord_number"]
-        ord_status = order_details["ord_status"]
-        ord_date = order_details["ord_date"]
-        ord_appointment_date = order_details["ord_appointment_date"]
-        ord_beautician = order_details["ord_beautician"]
-        ord_description = order_details["ord_description"]
-        ord_ctmr_complaints = order_details["ord_ctmr_complaints"]
-        ord_skin_condition = order_details["ord_skin_condition"]
-        tbdOrderDetails = get_service_rendered(ord_number=ord_number)
-        tbdHomeSkinCare = get_service_homecare(ord_number=ord_number)
-    else:
-        ord_number=request.args.get("ord_number", '')
-        ord_date=request.args.get("ord_date", '')
-        ord_appointment_date=request.args.get("ord_appointment_date", '')
-        tbdOrderDetails = []
-        tbdHomeSkinCare = []
-
-    return render_template("svc_order_details.html",
-            s_action=s_action,
-            submitMode=submitMode,
-            ord_id=ord_id,
-            ord_number=ord_number,
-            ord_status=ord_status,
-            ord_date=ord_date,
-            ord_appointment_date=ord_appointment_date,
-            ord_beautician=ord_beautician,
-            ord_description=ord_description,
-            ord_ctmr_complaints=ord_ctmr_complaints,
-            ord_skin_condition=ord_skin_condition,
-            ctmr_uid=request.args.get("ctmr_uid", ''),
-            ctmr_fname=request.args.get("ctmr_fname", ''),
-            ctmr_lname=request.args.get("ctmr_lname", ''),
-            ctmr_gender=request.args.get("ctmr_gender", ''),
-            ctmr_email=request.args.get("ctmr_email", ''),
-            ctmr_contraindications=request.args.get("ctmr_contraindications", ''),
-            ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
-            ordStatusList=get_statusList(),
-            tbdOrderDetails=tbdOrderDetails,
-            tbdHomeSkinCare=tbdHomeSkinCare,
-            )
 
 
 @app.route("/edit_product_list", methods=["GET", "POST"])
@@ -574,11 +579,11 @@ def update_services_homecare(*, requestMethod, kwargs):
     tbl_service_homecare_new = json.loads(tbl_service_homecare_new)
     # validating data for changes
     tbl_service_homecare_old = get_service_homecare(ord_number=ord_number)
-    new_t = tuple(svr["product"] for svr in tbl_service_homecare_new)
-    old_t = tuple(svr["product"] for svr in tbl_service_homecare_old)
+    new_t = tuple(shc["product"] for shc in tbl_service_homecare_new)
+    old_t = tuple(shc["product"] for shc in tbl_service_homecare_old)
     if new_t == old_t:
         return []
-    # data was modified clear old rendered services
+    # data was modified clear old homecare services
     rows = clear_old_service_homecare(ord_number=ord_number)
 
     rows = []
@@ -587,6 +592,39 @@ def update_services_homecare(*, requestMethod, kwargs):
     }
     stmt = db_requests.stmt_sql_ins_service_homecare()
     for homecare in tbl_service_homecare_new:
+        kwargs.update(dict(homecare))
+        row = db.execute(stmt, **kwargs)
+        rows.append(row)
+
+    return rows
+
+
+def update_treatment_plan(*, requestMethod, kwargs):
+    """Update treatment plan within order"""
+
+    if requestMethod == "POST":
+        ord_number = request.form.get("ord_number", '')
+        tbl_treatment_plan_new = request.form.get("tbl_treatment_plan", '')
+    else:
+        ord_number = request.args.get("ord_number", '')
+        tbl_treatment_plan_new = request.args.get("tbl_treatment_plan", '')
+
+    tbl_treatment_plan_new = json.loads(tbl_treatment_plan_new)
+    # validating data for changes
+    tbl_treatment_plan_old = get_treatment_plan(ord_number=ord_number)
+    new_t = tuple(stp["product"] for stp in tbl_treatment_plan_new)
+    old_t = tuple(stp["product"] for stp in tbl_treatment_plan_old)
+    if new_t == old_t:
+        return []
+    # data was modified clear old treatment plan
+    rows = clear_old_treatment_plan(ord_number=ord_number)
+    
+    rows = []
+    kwargs = {
+        "ord_number": ord_number,
+    }
+    stmt = db_requests.stmt_sql_ins_service_trt_plan()
+    for homecare in tbl_treatment_plan_new:
         kwargs.update(dict(homecare))
         row = db.execute(stmt, **kwargs)
         rows.append(row)
@@ -612,6 +650,15 @@ def clear_old_rendered_services(**kwargs):
     return rows
 
 
+def get_service_homecare(**kwargs):
+    """Get homecare products within order"""
+
+    stmt = db_requests.stmt_sql_get_service_homecare()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
 def clear_old_service_homecare(**kwargs):
     """Delete home care recommendations within order"""
 
@@ -621,10 +668,19 @@ def clear_old_service_homecare(**kwargs):
     return rows
 
 
-def get_service_homecare(**kwargs):
-    """Get homecare products within order"""
+def get_treatment_plan(**kwargs):
+    """Get treatment plan within order"""
 
-    stmt = db_requests.stmt_sql_get_service_homecare()
+    stmt = db_requests.stmt_sql_get_service_trt_plan()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def clear_old_treatment_plan(**kwargs):
+    """Delete treatment plan within order"""
+
+    stmt = db_requests.stmt_sql_del_service_trt_plan()
     rows = db.execute(stmt, **kwargs)
     
     return rows
