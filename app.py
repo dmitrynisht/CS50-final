@@ -268,20 +268,23 @@ def save_order_details():
             except:pass
 
         else:
-            try:
+            # try:
                 # update_order_details() is decorated by validate_customer_order()
                 # validate_customer_order() invokes get_service_order_details() which is passed by name to get_order_details argument
                 rows = update_order_details(get_order_details=get_service_order_details, requestMethod=requestMethod, kwargs={})
 
                 rows = update_services_rendered(requestMethod=requestMethod, kwargs={})
+                
+                rows = update_services_homecare(requestMethod=requestMethod, kwargs={})
+
                 trn_data['trn_complete'] = True
 
-            except AssertionError as error_msg:
-                trn_data["error_msg"] = error_msg.args
+            # except AssertionError as error_msg:
+            #     trn_data["error_msg"] = error_msg.args
                 
-            except:
-                error_msg = "SOMETHING WENT WRONG!"
-                trn_data["error_msg"] = error_msg
+            # except:
+            #     error_msg = "SOMETHING WENT WRONG!"
+            #     trn_data["error_msg"] = error_msg
 
     return trn_data
 
@@ -308,13 +311,13 @@ def svc_order_details():
         ord_ctmr_complaints = order_details["ord_ctmr_complaints"]
         ord_skin_condition = order_details["ord_skin_condition"]
         tbdOrderDetails = get_service_rendered(ord_number=ord_number)
-        rows = []
+        tbdHomeSkinCare = get_service_homecare(ord_number=ord_number)
     else:
         ord_number=request.args.get("ord_number", '')
         ord_date=request.args.get("ord_date", '')
         ord_appointment_date=request.args.get("ord_appointment_date", '')
         tbdOrderDetails = []
-        rows = []
+        tbdHomeSkinCare = []
 
     return render_template("svc_order_details.html",
             s_action=s_action,
@@ -335,9 +338,9 @@ def svc_order_details():
             ctmr_email=request.args.get("ctmr_email", ''),
             ctmr_contraindications=request.args.get("ctmr_contraindications", ''),
             ctmr_additional_info=request.args.get("ctmr_additional_info", ''),
-            rows=request.args.get("rows", rows),
             ordStatusList=get_statusList(),
             tbdOrderDetails=tbdOrderDetails,
+            tbdHomeSkinCare=tbdHomeSkinCare,
             )
 
 
@@ -552,7 +555,41 @@ def update_services_rendered(*, requestMethod, kwargs):
     for service in tbl_service_rendered_new:
         kwargs.update(dict(service))
         row = db.execute(stmt, **kwargs)
-        rows.append("row")
+        rows.append(row)
+
+    return rows
+
+
+# @validate_services_rendered
+def update_services_homecare(*, requestMethod, kwargs):
+    """Update services rendered within order"""
+
+    if requestMethod == "POST":
+        ord_number = request.form.get("ord_number", '')
+        tbl_service_homecare_new = request.form.get("tbl_service_homecare", '')
+    else:
+        ord_number = request.args.get("ord_number", '')
+        tbl_service_homecare_new = request.args.get("tbl_service_homecare", '')
+
+    tbl_service_homecare_new = json.loads(tbl_service_homecare_new)
+    # validating data for changes
+    tbl_service_homecare_old = get_service_homecare(ord_number=ord_number)
+    new_t = tuple(svr["product"] for svr in tbl_service_homecare_new)
+    old_t = tuple(svr["product"] for svr in tbl_service_homecare_old)
+    if new_t == old_t:
+        return []
+    # data was modified clear old rendered services
+    rows = clear_old_service_homecare(ord_number=ord_number)
+
+    rows = []
+    kwargs = {
+        "ord_number": ord_number,
+    }
+    stmt = db_requests.stmt_sql_ins_service_homecare()
+    for homecare in tbl_service_homecare_new:
+        kwargs.update(dict(homecare))
+        row = db.execute(stmt, **kwargs)
+        rows.append(row)
 
     return rows
 
@@ -567,9 +604,27 @@ def get_service_rendered(**kwargs):
 
 
 def clear_old_rendered_services(**kwargs):
-    """Delete rendered services"""
-    
+    """Delete rendered services within order"""
+
     stmt = db_requests.stmt_sql_del_services_rendered()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def clear_old_service_homecare(**kwargs):
+    """Delete home care recommendations within order"""
+
+    stmt = db_requests.stmt_sql_del_service_homecare()
+    rows = db.execute(stmt, **kwargs)
+    
+    return rows
+
+
+def get_service_homecare(**kwargs):
+    """Get homecare products within order"""
+
+    stmt = db_requests.stmt_sql_get_service_homecare()
     rows = db.execute(stmt, **kwargs)
     
     return rows

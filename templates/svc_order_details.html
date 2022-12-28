@@ -248,12 +248,23 @@
                         </tr>
                     </thead>
                     <tbody name="tbdHomeSkinCare">
-                        <tr>
-                            <td class="text-start" name="commodity" product="Some useful product" prod_how_to_use = "how to use">
-                                <input class="d-none" name="commodity" type="text" value="">
-                                Some useful product
-                            </td>
-                        </tr>
+                        {% if tbdHomeSkinCare %}
+                            {% for homeProduct in tbdHomeSkinCare %}
+                                <tr>
+                                    <td class="text-start" name="commodity" product="{{ homeProduct.product }}" prod_how_to_use = "how to use">
+                                        <input class="d-none" name="commodity" type="text" value="">
+                                        {{ homeProduct.product }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="text-start" name="commodity" product="Some useful product" prod_how_to_use = "how to use">
+                                    <input class="d-none" name="commodity" type="text" value="">
+                                    Some useful product
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>    
                 </table>
 
@@ -545,11 +556,11 @@
                 if (ptype == 'service') {
                     kwAttrs["duration"] = row["prod_duration"]
                     kwAttrs["price"] = row["price"]
-                    kwAttrs["prod_how_to_use"] = ""
+                    // kwAttrs["prod_how_to_use"] = ""
                     kwAttrs["imgPath"] = ""
                 } else if (ptype == 'commodity') {
-                    kwAttrs["duration"] = "0"
-                    kwAttrs["price"] = "0"
+                    // kwAttrs["duration"] = "0"
+                    // kwAttrs["price"] = "0"
                     kwAttrs["prod_how_to_use"] = ""
                     // kwAttrs["prod_how_to_use"] = row["prod_how_to_use"]
                     kwAttrs["imgPath"] = row["prod_img_path"]
@@ -590,9 +601,15 @@
             itemButton.setAttribute("data-bs-toggle", "button")
             itemButton.setAttribute("autocomplete", "off")
             itemButton.setAttribute("product", product)
-            itemButton.setAttribute("duration", kwAttrs["duration"])
-            itemButton.setAttribute("price", kwAttrs["price"])
-            itemButton.setAttribute("prod_how_to_use", kwAttrs["prod_how_to_use"])
+            if ("duration" in kwAttrs) {
+                itemButton.setAttribute("duration", kwAttrs["duration"])
+            }
+            if ("price" in kwAttrs) {
+                itemButton.setAttribute("price", kwAttrs["price"])
+            }
+            if ("prod_how_to_use" in kwAttrs) {
+                itemButton.setAttribute("prod_how_to_use", kwAttrs["prod_how_to_use"])
+            }
             itemButton.addEventListener('click', selectItem, false)
             itemButton.textContent = product
             divItem.appendChild(itemButton)
@@ -660,10 +677,20 @@
             for (let row of rows) {
                 // adding tr-s and td-s for each row
                 var product = row.getAttribute("product")
-                var duration = row.getAttribute("duration")
-                var price = row.getAttribute("price")
-                var prod_how_to_use = row.getAttribute("prod_how_to_use")
-                tbl.appendChild(createTableRowItem(product, ptype, duration, price, prod_how_to_use))
+                var kwAttrs = {}
+                if (row.hasAttribute("duration")) {
+                    kwAttrs["duration"] = row.getAttribute("duration")
+                    var duration = row.getAttribute("duration")
+                }
+                if (row.hasAttribute("price")) {
+                    kwAttrs["price"] = row.getAttribute("price")
+                    var price = row.getAttribute("price")
+                }
+                if (row.hasAttribute("prod_how_to_use")) {
+                    kwAttrs["prod_how_to_use"] = row.getAttribute("prod_how_to_use")
+                    var prod_how_to_use = row.getAttribute("prod_how_to_use")
+                }
+                tbl.appendChild(createTableRowItem(product, ptype, kwAttrs, duration, price, prod_how_to_use))
             }
             // // bootstrap method doesn't work correctly
             // $('#exampleModal').hide()
@@ -671,7 +698,7 @@
         })
 
         // Creating Table row item for insertion into table
-        function createTableRowItem(product, ptype, duration, price, prod_how_to_use) {
+        function createTableRowItem(product, ptype, kwAttrs, duration, price, prod_how_to_use) {
             var tr = document.createElement("tr")
             
             var input = document.createElement("input")
@@ -683,9 +710,18 @@
             td.setAttribute("class", "text-start")
             td.setAttribute("name", ptype)
             td.setAttribute("product", product)
-            td.setAttribute("duration", duration)
-            td.setAttribute("price", price)
-            td.setAttribute("prod_how_to_use", prod_how_to_use)
+            if ("duration" in kwAttrs) {
+                td.setAttribute("duration", kwAttrs["duration"])
+                // td.setAttribute("duration", duration)
+            }
+            if ("price" in kwAttrs) {
+                td.setAttribute("price", kwAttrs["price"])
+                // td.setAttribute("price", price)
+            }
+            if ("prod_how_to_use" in kwAttrs) {
+                td.setAttribute("prod_how_to_use", kwAttrs["prod_how_to_use"])
+                // td.setAttribute("prod_how_to_use", prod_how_to_use)
+            }
             td.appendChild(input)
             td.textContent = product
             tr.appendChild(td)
@@ -759,7 +795,8 @@
             '&ord_description=' + ord_description +
             '&ord_ctmr_complaints=' + ord_ctmr_complaints +
             '&ord_skin_condition=' + ord_skin_condition +
-            '&tbl_service_rendered=' + tableStringify("tbdOrderDetails")
+            '&tbl_service_rendered=' + tableStringify("tbdOrderDetails") +
+            '&tbl_service_homecare=' + tableStringify("tbdHomeSkinCare")
 
             try {
                 let response = await fetch(url);
@@ -784,8 +821,13 @@
                 var row = new Object()
                 var docColumn = docRow.querySelector(`td`)
                 row["product"] = docColumn.getAttribute("product")
-                row["duration"] = docColumn.getAttribute("duration")
-                row["price"] = docColumn.getAttribute("price")
+                if (docColumn.hasAttribute("duration")) {
+                    row["duration"] = docColumn.getAttribute("duration")
+                }
+                if (docColumn.hasAttribute("price")) {
+                    row["price"] = docColumn.getAttribute("price")
+                }
+                // alert(JSON.stringify(row))
                 tbl.push(row)
             }
             // alert(JSON.stringify(tbl))
