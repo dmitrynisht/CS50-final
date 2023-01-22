@@ -1,5 +1,5 @@
 # 'tiny beauty': CRM
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://youtu.be/XzetGV4-a6M
 #### Description:
 #### This is my final project for [Harvard_CS50](https://cs50.harvard.edu/x/2022/)
 'tiny beauty' is a Flask web application for a small beauty salon or a parlour. In its present state it is kind of CRM-systems (Customer Relationship Management). It is designed to keep track of our customers and services beeing provided for our customers.
